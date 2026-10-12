@@ -1,6 +1,9 @@
 #include <CUnit/Basic.h>
-#include "hash_table.h"
-#include "hash_table_iterator.h"
+#include "../generic_types/hash_table.h"
+#include "../generic_types/hash_table_iterator.h"
+#include "../generic_types/linked_list.h"
+#include "../generic_types/list_iterator.h"
+
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
@@ -51,8 +54,6 @@ void test_add_several_merch(void) {
     add_merch(name, description, price)
     list_merch()
 }
-
-
 
 int main() {
   // First we try to set up CUnit, and exit if we fail
