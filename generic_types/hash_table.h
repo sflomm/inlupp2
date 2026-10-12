@@ -1,11 +1,12 @@
-#include  <stdbool.h>
-#include "common.h"
 #pragma once
+#include <stdbool.h>
+#include <stddef.h>
+#include "common.h"
 
 /**
 * @file hash_table.h
-* @author Simon Funke, Max Björbaek Andersson
-* @date 2026-09-01
+* @author Ludvig Zeitler, Ella Odlander
+* @date 18/9 2026
 * @brief Simple hash table that maps string keys to integer values.
 *
 * Here typically goes a more extensive explanation of what the header
@@ -16,25 +17,9 @@
 
 typedef struct hash_table ioopm_hash_table_t;
 
-/// @brief Delete a hash table and free its memory
-/// @param ht a hash table to be deleted
-/// @param key a key to be looked up
-/// @return true or false
-bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, elem_t key);
-
-/// @brief check if a hash table is empty
-/// @param a hashtable
-/// @return true or false
-bool ioopm_hash_table_is_empty(ioopm_hash_table_t *ht);
-
-/// @brief calculates the table size of the hash table 
-/// @param a hashtable
-/// @return the table size as a integer
-size_t ioopm_hash_table_size(ioopm_hash_table_t *ht);
-
-/// @brief Create a new hash table
-/// @param a hash function
-/// @param a equals function
+/// @brief Create a new hash table with homogenous keys
+/// @param hash_fn hash function that specifies type of key-elements
+/// @param key_eq_fn a function for checking equality of keys
 /// @return A new empty hash table
 ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function *hash_fn, ioopm_eq_function *key_eq_fn);
 
@@ -51,12 +36,28 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t value);
 /// @brief lookup value for key in hash table ht
 /// @param ht hash table operated upon
 /// @param key key to lookup
-/// @return the value mapped to by key
+/// @param result a pointer in which to store the value of the key
+/// @return true if key was found, false if not (FIXME: what if the key does not exist?)
 bool ioopm_hash_table_lookup(ioopm_hash_table_t *ht, elem_t key, elem_t *result);
 
 /// @brief remove any mapping from key to a value
 /// @param ht hash table operated upon
 /// @param key key to remove
-/// @return the value mapped to by key
+/// @return the value mapped to by key (FIXME: what if the key does not exist?)
 elem_t ioopm_hash_table_remove(ioopm_hash_table_t *ht, elem_t key);
 
+/// @brief looks through hash table for key
+/// @param ht hash table operated upon
+/// @param key key to check for
+/// @return true if key was found
+bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, elem_t key);
+
+/// @brief checks if size of hash table is zero
+/// @param ht hash table operated upon
+/// @return true if empty, otherwise false
+bool ioopm_hash_table_is_empty(ioopm_hash_table_t *ht);
+
+/// @brief counts every entry in a hash table
+/// @param ht hash table operated upon
+/// @return size of the hash table
+size_t ioopm_hash_table_size(ioopm_hash_table_t *ht);
