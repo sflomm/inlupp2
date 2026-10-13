@@ -46,13 +46,13 @@ int clean_suite(void) {
 // These are example test functions. You should replace them with
 // functions of your own.
 void test_add_1_merch(void) {
-    add_merch(name, description, price)
-    CU_ASSERT_TRUE(ioopm_hash_table_lookup(name));
+    add_merch("Bohnanza", "Epic board game", 200);
+    CU_ASSERT_TRUE(ioopm_hash_table_lookup("Bohnanza"));
 }
 
 void test_add_several_merch(void) {
-    add_merch(name, description, price)
-    list_merch()
+    add_merch(name, description, price);
+    list_merch();
 }
 
 int main() {
