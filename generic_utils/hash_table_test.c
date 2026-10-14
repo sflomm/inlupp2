@@ -1,8 +1,8 @@
 #include <CUnit/Basic.h>
 #include <string.h>
-#include "hash_table.h"
-#include "hash_table_struct.h"
-#include "hash_table_iterator.h"
+#include "../generic_types/hash_table.h"
+#include "../generic_types/hash_table_struct.h"
+#include "../generic_types/hash_table_iterator.h"
 
 int init_suite(void) {
   // Change this function if you want to do something *before* you

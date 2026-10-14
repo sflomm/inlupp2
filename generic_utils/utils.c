@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
-#include "utils.h"
+#include "../generic_types/utils.h"
 
 bool not_empty(char *str)
 {

@@ -1,8 +1,8 @@
-#include "hash_table_iterator.h"
-#include "hash_table_struct.h"
+#include "../generic_types/hash_table_iterator.h"
+#include "../generic_types/hash_table_struct.h"
 #include <assert.h>
 #include <stdlib.h>
-#include "common.h"
+#include "../generic_types/common.h"
 
 static void advance_iterator_state(ioopm_hash_table_iterator_t *it)
 {
