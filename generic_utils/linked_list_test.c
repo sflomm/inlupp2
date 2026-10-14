@@ -1,8 +1,8 @@
 #include <CUnit/Basic.h>
 #include <string.h>
-#include "linked_list_struct.h"
-#include "linked_list.h"
-#include "list_iterator.h"
+#include "../generic_types/linked_list_struct.h"
+#include "../generic_types/linked_list.h"
+#include "../generic_types/list_iterator.h"
 
 
 

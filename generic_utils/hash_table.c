@@ -1,8 +1,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#include "hash_table.h"
-#include "hash_table_struct.h"
+#include "../generic_types/hash_table.h"
+#include "../generic_types/hash_table_struct.h"
 
 
 // STATIC FUNCTIONS

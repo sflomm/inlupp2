@@ -1,9 +1,11 @@
-#include "hash_table.h"
-#include "common.h"
-#include "webstore_types.h"
-#include "webstore_types.h"
-#include "hash_table_struct.h"
+#include "../generic_types/hash_table.h"
+#include "../generic_types/common.h"
+#include "../generic_types/webstore_types.h"
+#include "../generic_types/webstore_types.h"
+#include "../generic_types/hash_table_struct.h"
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 // String keys
 size_t string_knr_hash(elem_t key)
@@ -62,11 +64,13 @@ void warehouse_add_merch(char *name, char *desc, int price, warehouse_t *wh)
 void warehouse_list_merch(warehouse_t *wh)
 {
   // TODO: Stub
+  (void) wh;
 }
 
 void warehouse_remove_merch(warehouse_t *wh, char *key)
 {
   // TODO: Stub
+  (void) wh;
 }
 
 void warehouse_edit_merch()

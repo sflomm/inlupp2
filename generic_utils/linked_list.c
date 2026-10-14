@@ -2,9 +2,9 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stddef.h>
-#include "linked_list.h"
-#include "list_iterator.h"
-#include "linked_list_struct.h"
+#include "../generic_types/linked_list.h"
+#include "../generic_types/list_iterator.h"
+#include "../generic_types/linked_list_struct.h"
 
 // Allocates space for list
 ioopm_list_t *ioopm_list_create(void)

@@ -1,6 +1,6 @@
-#include "linked_list_struct.h"
-#include "list_iterator.h"
-#include "linked_list.h"
+#include "../generic_types/linked_list_struct.h"
+#include "../generic_types/list_iterator.h"
+#include "../generic_types/linked_list.h"
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdlib.h>
