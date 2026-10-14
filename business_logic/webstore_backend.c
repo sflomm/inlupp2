@@ -86,7 +86,8 @@ void warehouse_replenish_stock()
 
 void warehouse_create_cart()
 {
-  // TODO: Stub
+  ioopm_hash_table_t *cart = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
+
 }
 
 void warehouse_remove_cart()
@@ -96,7 +97,8 @@ void warehouse_remove_cart()
 
 void warehouse_add_to_cart()
 {
-  // TODO: Stub
+  ioopm_hash_table_t *cart = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
+  ioopm_hash_table_insert(cart, 
 }
 
 void warehouse_remove_from_cart()

@@ -1,4 +1,4 @@
-hejej#include <CUnit/Basic.h>
+#include <CUnit/Basic.h>
 #include "../generic_types/hash_table.h"
 #include "../generic_types/hash_table_iterator.h"
 #include "../generic_types/linked_list.h"
@@ -62,7 +62,7 @@ warehouse_t *warehouse = warehouse_create();
   warehouse_destroy(warehouse);
 }
  
-void test_add_several_merch(void) {
+void test_add_several_merch() {
     warehouse_t *warehouse = warehouse_create();
     warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
     warehouse_add_merch(warehouse, "Catan", "Epic board game", 150);
@@ -95,16 +95,23 @@ void test_create_empty_cart() {
   warehouse_t *warehouse = warehouse_create();
   warehouse_create_cart();
   warehouse_remove_cart();
-
-  
 }
 
 void test_add_to_cart() {
   warehouse_t *warehouse = warehouse_create();
   warehouse_create_cart();
-  warehouse_add_to_cart()
+  warehouse_add_to_cart();
   warehouse_remove_cart();
 }
+
+void test_add_to_cart() {
+  warehouse_t *warehouse = warehouse_create();
+  warehouse_create_cart();
+  warehouse_add_to_cart();
+  warehouse_remove_cart();
+}
+
+
 
 
 int main() {
