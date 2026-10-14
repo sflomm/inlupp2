@@ -8,6 +8,7 @@
   #define ptr_elem(x)    ((elem_t) { .p = (x) })
   #define string_elem(x) ((elem_t) { .s = (x) })
 
+
   typedef union elem
   {
       int i;

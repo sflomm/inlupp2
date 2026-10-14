@@ -1,22 +1,23 @@
+#include "common.h"
+#include "linked_list.h"
 
-typedef struct merch_t merch_t;
-typedef struct shelf_t shelf_t;
-typedef struct link_t link_t;
-struct merch_t {
+typedef struct merch merch_t;
+typedef struct shelf shelf_t;
+typedef struct warehouse warehouse_t;
+
+struct merch {
     char *name;
-    char *description;
-    int price;
-    ioopm_linked_list* locs;
+    char *desc;
+    size_t price;
+    ioopm_list_t* locs;
 };
 
-struct link_t {
-    shelf_t elem;
-    link_t next;
-
-}
-
-struct shelf_t {
+struct shelf {
     char *shelf;
-    size_t quanitity = 42;
+    size_t quant;
+};
 
+struct warehouse {
+    ioopm_hash_table_t *merch_ht;
+    ioopm_hash_table_t *location_ht;
 };

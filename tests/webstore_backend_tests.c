@@ -1,9 +1,10 @@
-#include <CUnit/Basic.h>
+hejej#include <CUnit/Basic.h>
 #include "../generic_types/hash_table.h"
 #include "../generic_types/hash_table_iterator.h"
 #include "../generic_types/linked_list.h"
 #include "../generic_types/list_iterator.h"
-
+#include "../business_logic/webstore_backend.h"
+#include "../generic_types/webstore_types.h"
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
@@ -45,15 +46,66 @@ int clean_suite(void) {
 
 // These are example test functions. You should replace them with
 // functions of your own.
-void test_add_1_merch(void) {
-    add_merch("Bohnanza", "Epic board game", 200);
-    CU_ASSERT_TRUE(ioopm_hash_table_lookup("Bohnanza"));
+
+void test_create_destroy()
+{
+    warehouse_t *warehouse = warehouse_create();
+    CU_ASSERT_PTR_NOT_NULL(warehouse)
+    warehouse_destroy(warehouse);
+    CU_ASSERT_PTR_NULL(warehouse);
 }
 
-void test_add_several_merch(void) {
-    add_merch(name, description, price);
-    list_merch();
+void test_add_1_merch() {
+warehouse_t *warehouse = warehouse_create();
+  warehouse_add_merch(warehouse, string_elem("Bohnanza"), string_elem("Epic board game"), 200);
+  CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse.merch_ht, string_elem("Bohnanza")));
+  warehouse_destroy(warehouse);
 }
+ 
+void test_add_several_merch(void) {
+    warehouse_t *warehouse = warehouse_create();
+    warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+    warehouse_add_merch(warehouse, "Catan", "Epic board game", 150);
+    warehouse_add_merch(warehouse, "Small World", "Epic board game", 300);
+    CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
+    CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Catan")));
+    CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, "Small World"));
+    warehouse_destroy(warehouse);
+} 
+
+void test_remove_merch() {
+  warehouse_t *warehouse = warehouse_create();
+  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse.merch_ht, "Bohnanza"));
+  warehouse_remove_merch(warehouse, "Bohnanza");
+  CU_ASSERT_FALSE(ioopm_hash_table_has_key(warehouse.merch_ht, "Bohnanza"));
+  warehouse_destroy(warehouse);
+} 
+
+void test_edit_merch() {
+  warehouse_t *warehouse = warehouse_create();
+  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse.merch_ht, "Bohnanza"));
+  warehouse_edit_merch(warehouse, "Small World", "New Description" 300);
+  CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse.merch_ht, "Small World"));
+  CU_ASSERT_FALSE(ioopm_hash_table_has_key(warehouse.merch_ht, "Bohnanza"));
+}
+
+void test_create_empty_cart() {
+  warehouse_t *warehouse = warehouse_create();
+  warehouse_create_cart();
+  warehouse_remove_cart();
+
+  
+}
+
+void test_add_to_cart() {
+  warehouse_t *warehouse = warehouse_create();
+  warehouse_create_cart();
+  warehouse_add_to_cart()
+  warehouse_remove_cart();
+}
+
 
 int main() {
   // First we try to set up CUnit, and exit if we fail
@@ -62,7 +114,7 @@ int main() {
 
   // We then create an empty test suite and specify the name and
   // the init and cleanup functions
-  CU_pSuite my_test_suite = CU_add_suite("My awesome test suite", init_suite, clean_suite);
+  CU_pSuite my_test_suite = CU_add_suite("Test suite", init_suite, clean_suite);
   if (my_test_suite == NULL) {
       // If the test suite could not be added, tear down CUnit and exit
       CU_cleanup_registry();
@@ -75,6 +127,10 @@ int main() {
   // the test in question. If you want to add another test, just
   // copy a line below and change the information
   if (
+    // (CU_add_test(my_test_suite, "create and destroy", test_add_1_merch) == NULL) ||
+    // (CU_add_test(my_test_suite, "create and destroy", test_add_several_merch) == NULL) ||
+    // (CU_add_test(my_test_suite, "create and destroy", test_remove_merch) == NULL) ||
+    // (CU_add_test(my_test_suite, "create and destroy", test_edit_merch) == NULL) ||
     (CU_add_test(my_test_suite, "create and destroy", test_create_destroy) == NULL) ||
     0
   )
