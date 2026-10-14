@@ -7,13 +7,11 @@ typedef struct warehouse warehouse_t;
 /// @return
 warehouse_t *warehouse_create();
 
-
 /// @brief 
 /// @param 
 /// @param 
 /// @return
 void warehouse_destroy(warehouse_t *wh);
-
 
 /// @brief 
 /// @param 
@@ -27,13 +25,11 @@ void warehouse_add_merch(char *name, char *desc, int price, warehouse_t *wh);
 /// @return
 void warehouse_list_merch(warehouse_t *wh);
 
-
 /// @brief 
 /// @param 
 /// @param 
 /// @return
 void warehouse_remove_merch(warehouse_t *wh, char *key);
-
 
 /// @brief 
 /// @param 
@@ -41,13 +37,11 @@ void warehouse_remove_merch(warehouse_t *wh, char *key);
 /// @return
 void warehouse_edit_merch();
 
-
 /// @brief 
 /// @param 
 /// @param 
 /// @return
 void warehouse_show_stock();
-
 
 /// @brief 
 /// @param 
@@ -55,21 +49,17 @@ void warehouse_show_stock();
 /// @return
 void warehouse_replenish_stock();
 
-
-
 /// @brief 
 /// @param 
 /// @param 
 /// @return
 void warehouse_create_cart();
 
-
 /// @brief 
 /// @param 
 /// @param 
 /// @return
 void warehouse_remove_cart();
-
 
 /// @brief 
 /// @param 
