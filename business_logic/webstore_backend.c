@@ -106,7 +106,6 @@ void warehouse_add_to_cart(elem_t cart, char *key)
 }
 
 void warehouse_remove_from_cart()
-warehouse_remove_from_cart
 {
   // TODO: Stub
 }

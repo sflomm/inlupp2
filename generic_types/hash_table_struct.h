@@ -14,7 +14,11 @@ struct hash_table
 {
   ioopm_eq_function *key_eq_fn;
   ioopm_hash_function *hash_fn;
-  entry_t buckets[No_Buckets]; // size dependent on macro No_Buckets
+  size_t size;
+  size_t capacity;
+  double load_factor;
+
+  entry_t *buckets;
 };
 
 struct hash_table_iterator

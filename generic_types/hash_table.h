@@ -61,3 +61,11 @@ bool ioopm_hash_table_is_empty(ioopm_hash_table_t *ht);
 /// @param ht hash table operated upon
 /// @return size of the hash table
 size_t ioopm_hash_table_size(ioopm_hash_table_t *ht);
+
+/// @brief creates a hashtable with a dynamic size
+/// @param hash_fn hash function that specifies type of key-elements
+/// @param key_eq_fn a function for checking equality of keys
+/// @param load_factor load factor for the hash table
+/// @param capacity capacity of the hash table
+/// @return A new empty hash table
+ioopm_hash_table_t *ioopm_hash_table_create_dynamic(ioopm_hash_function *hash_fn, ioopm_eq_function *key_eq_fn, size_t capacity, double load_factor);

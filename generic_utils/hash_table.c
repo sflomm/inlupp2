@@ -24,14 +24,14 @@ static entry_t *entry_destroy(entry_t *to_remove)
 {
   entry_t *next = to_remove->next;
   free(to_remove);
-  return next;  
+  return next;    
 }
 
 // Returns pointer to previous entry or returns pointer to last entry if key not found
 static entry_t *find_previous_entry(ioopm_hash_table_t *ht, elem_t key)
 {
   // find bucket
-  size_t bucket = ht->hash_fn(key) % No_Buckets;
+  size_t bucket = ht->hash_fn(key) % ht->capacity;
   entry_t *previous = &ht->buckets[bucket]; //starts at sentinel node
   entry_t *current = previous->next;
   
@@ -58,39 +58,130 @@ static void destroy_linked_list(entry_t *entry)
 
 // IOOPM FUNCTIONS
 
-ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function *hash_fn, ioopm_eq_function *key_eq_fn)
+ioopm_hash_table_t *ioopm_hash_table_create(
+    ioopm_hash_function *hash_fn,
+    ioopm_eq_function *key_eq_fn)
 {
-    ioopm_hash_table_t *ht = calloc(1, sizeof(ioopm_hash_table_t));
+    return ioopm_hash_table_create_dynamic(
+        hash_fn,
+        key_eq_fn,
+        17,
+        0.75
+    );
+}
+
+ioopm_hash_table_t *ioopm_hash_table_create_dynamic(
+    ioopm_hash_function *hash_fn,
+    ioopm_eq_function *key_eq_fn,
+    size_t capacity,
+    double load_factor)
+{
+    if (capacity == 0 || load_factor <= 0 || load_factor > 1)
+    {
+        return NULL;
+    }
+
+    ioopm_hash_table_t *ht = calloc(1, sizeof(*ht));
+
+    if (ht == NULL)
+    {
+        return NULL;
+    }
+
+    ht->buckets = calloc(capacity, sizeof(*ht->buckets));
+
+    if (ht->buckets == NULL)
+    {
+        free(ht);
+        return NULL;
+    }
+
+    ht->capacity = capacity;
+    ht->size = 0;
+    ht->load_factor = load_factor;
     ht->hash_fn = hash_fn;
     ht->key_eq_fn = key_eq_fn;
+
     return ht;
 }
 
 void ioopm_hash_table_destroy(ioopm_hash_table_t *ht) 
 {
-    for (int i = 0; i < No_Buckets; i++)
+    for (size_t i = 0; i < ht->capacity; i++)
     {
       if (ht->buckets[i].next != NULL)
       {
         destroy_linked_list(ht->buckets[i].next);
       }
     }
+  free(ht->buckets);
   free(ht);
+  
+}
+
+static bool resize_hash_table(ioopm_hash_table_t *ht, size_t new_capacity)
+{
+    entry_t *new_buckets = calloc(new_capacity, sizeof(*new_buckets));
+
+    if (new_buckets == NULL)
+    {
+        return false;
+    }
+
+    for (size_t i = 0; i < ht->capacity; i++)
+    {
+        entry_t *current = ht->buckets[i].next;
+
+        while (current != NULL)
+        {
+            entry_t *next = current->next;
+
+            size_t new_index = ht->hash_fn(current->key) % new_capacity;
+
+            current->next = new_buckets[new_index].next;
+            new_buckets[new_index].next = current;
+
+            current = next;
+        }
+    }
+
+    free(ht->buckets);
+
+    ht->buckets = new_buckets;
+    ht->capacity = new_capacity;
+
+    return true;
 }
 
 void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t value)
 {
-  entry_t *previous = find_previous_entry(ht, key);
+    entry_t *previous = find_previous_entry(ht, key);
 
-  // if key exists, update the value, otherwise create a new entry
-  if (previous->next != NULL)
-  {
-    previous->next->value = value;
-  }
-  else
-  {
-    previous->next = entry_create(key, value, NULL); // entry is in heap
-  }
+    if (previous->next != NULL)
+    {
+        previous->next->value = value;
+        return;
+    }
+
+    if ((double)(ht->size + 1) / ht->capacity > ht->load_factor)
+    {
+        size_t new_capacity = ht->capacity * 2;
+
+        while ((double)(ht->size + 1) / new_capacity > ht->load_factor)
+        {
+            new_capacity *= 2;
+        }
+
+        if (!resize_hash_table(ht, new_capacity))
+        {
+            return;
+        }
+
+        previous = find_previous_entry(ht, key);
+    }
+
+    previous->next = entry_create(key, value, NULL);
+    ht->size++;
 }
 
 bool ioopm_hash_table_lookup(ioopm_hash_table_t *ht, elem_t key, elem_t *result)
@@ -118,6 +209,7 @@ elem_t ioopm_hash_table_remove(ioopm_hash_table_t *ht, elem_t key)
   if (to_remove != NULL)
   {
     elem_t to_remove_int = previous->next->value;
+    ht->size--;
     entry_t *next = entry_destroy(to_remove);
     previous->next = next; // remove entry and update previous entry's next-pointer 
     return to_remove_int; // return value of removed entry
@@ -131,24 +223,9 @@ bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, elem_t key)
   return ioopm_hash_table_lookup(ht, key, &result);
 }
 
-static size_t bucket_size(entry_t *entry)
-{
-  size_t size = 0;
-  while(entry != NULL)
-  {
-    ++size;
-    entry = entry->next; 
-  }
-  return size;
-}
-
 size_t ioopm_hash_table_size(ioopm_hash_table_t *ht)
 {
-  size_t size = 0;
-  for (int i = 0; i < No_Buckets; i++) {
-    size += bucket_size(ht->buckets[i].next);
-  }
-  return size;
+  return ht->size;
 }
 
 bool ioopm_hash_table_is_empty(ioopm_hash_table_t *ht)
