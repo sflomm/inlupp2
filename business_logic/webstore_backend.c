@@ -3,6 +3,7 @@
 #include "../generic_types/webstore_types.h"
 #include "../generic_types/webstore_types.h"
 #include "../generic_types/hash_table_struct.h"
+#include "../generic_types/hash_table_iterator.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -64,20 +65,32 @@ void warehouse_add_merch(char *name, char *desc, int price, warehouse_t *wh)
 // action code "L", "n" return to main menu
 void warehouse_list_merch(warehouse_t *wh)
 {
-  // TODO: Stub
-  (void) wh;
+  ioopm_hash_table_t *merch_ht = wh->merch_ht;
+  ioopm_hash_table_iterator_t *merch_it = ioopm_hash_table_iterator_create(merch_ht);
+  elem_t current_key = ioopm_hash_table_iterator_current_key(merch_it);
+  int c = 0;
+
+  while (!ioopm_hash_table_iterator_at_end(merch_it) && c <= 20)
+  {
+    printf("%d. %s\n", c, current_key);
+    ioopm_hash_table_iterator_advance(merch_it);
+    ioopm_hash_table_iterator_current_key(merch_it);
+    c++;
+  }
 }
 
 void warehouse_remove_merch(warehouse_t *wh, char *key)
 {
-  // TODO: Stub
+  // TODO: måste frigöra alla pekare
   (void) wh;
   (void) key;
 }
 
-void warehouse_edit_merch()
+void warehouse_edit_merch(warehouse_t *wh, char *key)
 {
   // TODO: Stub
+  (void) wh;
+  (void) key;
 }
 
 void warehouse_show_stock()
@@ -95,6 +108,7 @@ void warehouse_create_cart()
   // ioopm_hash_table_t *cart = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
 
 }
+
 
 void warehouse_remove_cart()
 {

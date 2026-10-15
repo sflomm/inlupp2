@@ -1,23 +1,28 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 #include <stdbool.h>
+
 extern char *strdup(const char *);
 typedef bool check_func(char *);
+
 typedef union { 
   int   int_value;
   float float_value;
   char *string_value;
   char character;
 } answer_t;
+
 typedef answer_t convert_func(char *);
 typedef struct item item_t;
 typedef struct point point_t;
+
 struct item {
     char *namn;
     char *beskrivning;
     int pris;
     char *id;
 };
+
 void clear_input_buffer(void);
 int read_string(char *buf, int buf_siz);
 bool is_number(char *str);
