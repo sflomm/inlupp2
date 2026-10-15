@@ -1,4 +1,5 @@
 #include "business_logic/webstore_backend.h"
+#include "generic_types/utils.h"
 
 void event_loop(warehouse_t *wh)
 {
