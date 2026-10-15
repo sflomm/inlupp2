@@ -1,3 +1,4 @@
+#pragma once
 #include "common.h"
 #include "linked_list.h"
 
@@ -9,7 +10,7 @@ struct merch {
     char *name;
     char *desc;
     size_t price;
-    ioopm_list_t* locs;
+    ioopm_list_t *locs;
 };
 
 struct shelf {

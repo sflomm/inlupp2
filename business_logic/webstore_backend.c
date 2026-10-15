@@ -39,10 +39,11 @@ warehouse_t *warehouse_create()
     return warehouse;
 }
 
-void warehouse_destroy(ioopm_hash_table_t *ht1, ioopm_hash_table_t *ht2)
+void warehouse_destroy(warehouse_t *wh)
 {
-    ioopm_hash_table_destroy(ht1);
-    ioopm_hash_table_destroy(ht2);
+    ioopm_hash_table_destroy(wh->merch_ht);
+    ioopm_hash_table_destroy(wh->location_ht);
+    free(wh);
 }
 
 void warehouse_add_merch(char *name, char *desc, int price, warehouse_t *wh)
@@ -71,6 +72,7 @@ void warehouse_remove_merch(warehouse_t *wh, char *key)
 {
   // TODO: Stub
   (void) wh;
+  (void) key;
 }
 
 void warehouse_edit_merch()
@@ -90,7 +92,7 @@ void warehouse_replenish_stock()
 
 void warehouse_create_cart()
 {
-  ioopm_hash_table_t *cart = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
+  // ioopm_hash_table_t *cart = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
 
 }
 
@@ -101,8 +103,10 @@ void warehouse_remove_cart()
 
 void warehouse_add_to_cart(elem_t cart, char *key)
 {
-  ioopm_hash_table_t *cart = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
-  ioopm_hash_table_insert(cart, 
+  // ioopm_hash_table_t *cart = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
+  // ioopm_hash_table_insert(cart, 
+  (void) cart;
+  (void) key;
 }
 
 void warehouse_remove_from_cart()
