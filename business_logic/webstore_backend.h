@@ -72,8 +72,9 @@ void warehouse_remove_from_cart(ioopm_hash_table_t *cart_ht, char *cart, char *m
 /// @brief calculate cost of a shopping cart 
 /// @param cart_ht hash_table where all shopping carts are stored
 /// @param cart desired shopping cart
-/// @return the cost of all merch in the shopping cart
-int warehouse_calculate_cost(ioopm_hash_table_t *cart_ht, char *cart);
+// FIXME: is size_t always an integer?
+/// @return the cost (positive integer) of all merch in the shopping cart
+size_t warehouse_calculate_cost(ioopm_hash_table_t *cart_ht, char *cart);
 
 /// @brief user goes through purchase of all merch in specific shopping cart
 /// the stock for the merches of the cart is decreased and shopping cart is removed from system

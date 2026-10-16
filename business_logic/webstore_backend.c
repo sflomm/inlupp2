@@ -97,48 +97,64 @@ void warehouse_edit_merch(warehouse_t *wh, char *key)
   (void) key;
 }
 
-void warehouse_show_stock()
+void warehouse_show_stock(warehouse_t *wh, char *key)
 {
   // TODO: Stub
-}
-
-void warehouse_replenish_stock()
-{
-  // TODO: Stub  
-}
-
-void warehouse_create_cart()
-{
-  // ioopm_hash_table_t *cart = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
-
-}
-
-
-void warehouse_remove_cart()
-{
-  // TODO: Stub
-}
-
-void warehouse_add_to_cart(elem_t cart, char *key)
-{
-  // ioopm_hash_table_t *cart = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
-  // ioopm_hash_table_insert(cart, 
-  (void) cart;
+  (void) wh;
   (void) key;
 }
 
-void warehouse_remove_from_cart()
+void warehouse_replenish_stock(warehouse_t *wh, char *key)
 {
-  // TODO: Stub
+  // TODO: Stub  
+  (void) wh;
+  (void) key;
 }
 
-void warehouse_calculate_cost()
+ioopm_hash_table_t warehouse_create_cart(warehouse_t *wh)
 {
-  // TODO: Stub
+  // ioopm_hash_table_t *cart = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
+  (void) wh;
 }
 
-void warehouse_checkout()
+
+void warehouse_remove_cart(warehouse_t *wh, char *key)
 {
   // TODO: Stub
+  (void) wh;
+  (void) key;
+}
+
+void warehouse_add_to_cart(ioopm_hash_table_t *cart_ht, char *cart, char *merch, int quant)
+{
+  // ioopm_hash_table_t *cart = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
+  // ioopm_hash_table_insert(cart, 
+  (void) cart_ht;
+  (void) cart;
+  (void) merch;
+  (void) quant;
+}
+
+void warehouse_remove_from_cart(ioopm_hash_table_t *cart_ht, char *cart, char *merch, int quant)
+{
+  // TODO: Stub
+  (void) cart_ht;
+  (void) cart;
+  (void) merch;
+  (void) quant;
+}
+
+size_t warehouse_calculate_cost(ioopm_hash_table_t *cart_ht, char *cart)
+{
+  // TODO: Stub
+  (void) cart_ht;
+  (void) cart;
+}
+
+void warehouse_checkout(warehouse_t *wh, char *cart)
+{
+  // TODO: Stub
+  (void) wh;
+  (void) cart;
 }
 
