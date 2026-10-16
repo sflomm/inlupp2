@@ -61,22 +61,23 @@ void warehouse_add_merch(char *name, char *desc, int price, warehouse_t *wh)
 }
 
 // list all items in store, alphabetically ordered
-// print 20 at a time, ask user if they want to continue listing 20 more
+// print all keys 
 // action code "L", "n" return to main menu
+// FIXME: ui print 20 more 
 void warehouse_list_merch(warehouse_t *wh)
 {
-  ioopm_hash_table_t *merch_ht = wh->merch_ht;
-  ioopm_hash_table_iterator_t *merch_it = ioopm_hash_table_iterator_create(merch_ht);
-  elem_t current_key = ioopm_hash_table_iterator_current_key(merch_it);
-  int c = 0;
-
-  while (!ioopm_hash_table_iterator_at_end(merch_it) && c <= 20)
-  {
-    printf("%d. %s\n", c, current_key);
-    ioopm_hash_table_iterator_advance(merch_it);
-    ioopm_hash_table_iterator_current_key(merch_it);
-    c++;
-  }
+  // ioopm_hash_table_t *merch_ht = wh->merch_ht;
+  // ioopm_hash_table_iterator_t *merch_it = ioopm_hash_table_iterator_create(merch_ht);
+  // elem_t current_key = ioopm_hash_table_iterator_current_key(merch_it);
+  // size_t c = 0; // counter
+  // while (!ioopm_hash_table_iterator_at_end(merch_it))
+  // {
+  //   printf("%d. %s\n", c, current_key);
+  //   ioopm_hash_table_iterator_advance(merch_it);
+  //   ioopm_hash_table_iterator_current_key(merch_it);
+  //   c++; // increase counter 
+  // }
+  (void) wh;
 }
 
 void warehouse_remove_merch(warehouse_t *wh, char *key)

@@ -8,8 +8,6 @@ COV = webstore_backend.gcda
 vpath %.c generic_utils	
 vpath %.c business_logic
 vpath %.c tests
-vpath %.c freq_count
-vpath %.c hash_table
 
 # all: webstore_backend_tests
 # 	./webstore_backend_tests

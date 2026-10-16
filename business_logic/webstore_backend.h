@@ -35,7 +35,7 @@ void warehouse_remove_merch(warehouse_t *wh, char *key);
 /// @param 
 /// @param 
 /// @return
-void warehouse_edit_merch();
+void warehouse_edit_merch(char *key, char *new_key, char *new_desc, size_t new_price, warehouse_t *wh);
 
 /// @brief 
 /// @param 
