@@ -24,8 +24,8 @@ test: webstore_backend_tests
 # valgrind_webstoreback: webstore_backend_tests
 # 	valgrind --leak-check=full ./webstore_backend_tests
 
-# valgrind: webstore_backend_tests
-# 	valgrind --leak-check=full ./webstore_backend_tests
+valgrind: webstore_backend_tests
+	valgrind --leak-check=full ./webstore_backend_tests
 
 # webstoreback_cov: webstore_backend_tests
 # 	make $<

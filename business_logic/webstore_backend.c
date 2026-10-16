@@ -4,6 +4,9 @@
 #include "../generic_types/webstore_types.h"
 #include "../generic_types/hash_table_struct.h"
 #include "../generic_types/hash_table_iterator.h"
+#include "../generic_types/linked_list_struct.h"
+#include "../generic_types/linked_list.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -32,22 +35,51 @@ warehouse_t *warehouse_create()
     ioopm_hash_table_t *merch_ht = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
     //table of locations
     ioopm_hash_table_t *location_ht = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
-    //table of shopping carts
-    ioopm_hash_table_t *cart_ht = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
+    //struct of carts
+    shopping_cart_t *carts = calloc(1, sizeof(shopping_cart_t));
+        //table of shopping carts
+    ioopm_list_t *cart_list = ioopm_list_create();
 
     warehouse_t *warehouse = calloc(1, sizeof(warehouse_t));
     warehouse->merch_ht = merch_ht;
     warehouse->location_ht = location_ht;
-    warehouse->cart_ht = cart_ht;
-
+    warehouse->carts = carts;
+    warehouse->carts->cart_list = cart_list;
+    warehouse->carts->id = 0;
+    
     return warehouse;
 }
+  void warehouse_destroy_merch(warehouse_t *wh) {
+ioopm_hash_table_iterator_t *iter =
+    ioopm_hash_table_iterator_create(wh->merch_ht);
 
-void warehouse_destroy(warehouse_t *wh)
+while (!ioopm_hash_table_iterator_at_end(iter))
 {
-    ioopm_hash_table_destroy(wh->merch_ht);
-    ioopm_hash_table_destroy(wh->location_ht);
-    free(wh);
+    elem_t value = ioopm_hash_table_iterator_current_value(iter);
+    merch_t *merch = value.p;
+
+    // Free locations if the merchandise owns this list
+    if (merch->locs != NULL)
+    {
+        ioopm_list_destroy(merch->locs);
+    }
+
+    free(merch);
+
+    ioopm_hash_table_iterator_advance(iter);
+}
+
+ioopm_hash_table_iterator_destroy(iter);
+}
+
+void warehouse_destroy(warehouse_t *wh) {
+  warehouse_destroy_merch(wh);
+  ioopm_hash_table_destroy(wh->merch_ht);
+  ioopm_hash_table_destroy(wh->location_ht);
+  ioopm_list_destroy(wh->carts->cart_list);
+  free(wh->carts);
+
+  free(wh);
 }
 
 void warehouse_add_merch(warehouse_t *wh, char *name, char *desc, int price)
@@ -63,23 +95,22 @@ void warehouse_add_merch(warehouse_t *wh, char *name, char *desc, int price)
 
 }
 
-// list all items in store, alphabetically ordered
-// print all keys 
-// action code "L", "n" return to main menu
-// FIXME: ui print 20 more 
 void warehouse_list_merch(warehouse_t *wh)
 {
-  // ioopm_hash_table_t *merch_ht = wh->merch_ht;
-  // ioopm_hash_table_iterator_t *merch_it = ioopm_hash_table_iterator_create(merch_ht);
-  // elem_t current_key = ioopm_hash_table_iterator_current_key(merch_it);
-  // size_t c = 0; // counter
-  // while (!ioopm_hash_table_iterator_at_end(merch_it))
-  // {
-  //   printf("%d. %s\n", c, current_key);
-  //   ioopm_hash_table_iterator_advance(merch_it);
-  //   ioopm_hash_table_iterator_current_key(merch_it);
-  //   c++; // increase counter 
-  // }
+  ioopm_hash_table_t *merch_ht = wh->merch_ht;
+  ioopm_hash_table_iterator_t *merch_it = ioopm_hash_table_iterator_create(merch_ht);
+  elem_t current_key = ioopm_hash_table_iterator_current_key(merch_it);
+  size_t c = 0; // counter
+
+  // FIXME: ui print 20 more, action code "L" -> n -> return to menu
+  // FIXME: alphabetically
+  while (!ioopm_hash_table_iterator_at_end(merch_it) && c <= 20)
+  {
+    printf("%d. %s\n", c, current_key);
+    ioopm_hash_table_iterator_advance(merch_it);
+    ioopm_hash_table_iterator_current_key(merch_it);
+    c++; // increase counter 
+  }
   (void) wh;
 }
 
@@ -88,6 +119,7 @@ void warehouse_remove_merch(warehouse_t *wh, char *key)
   // TODO: måste frigöra alla pekare
   (void) wh;
   (void) key;
+  
 }
 
 void warehouse_edit_merch(warehouse_t *wh, char *key)

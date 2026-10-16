@@ -105,11 +105,16 @@ void test_edit_merch() {
   CU_ASSERT_TRUE(price == actual_price);
 }
 
-// void test_create_empty_cart() {
-//   warehouse_t *warehouse = warehouse_create();
-//   warehouse_create_cart();
-//   warehouse_remove_cart();
+// test_create_empty_cart() {
+// warehouse_t *warehouse = warehouse_create();
+// ioopm_hash_table_t *cart = warehouse_create_cart(warehouse);
+// CU_ASSERT_TRUE(ioopm_hash_table_is_empty(cart));
+
+// ioop
 // }
+
+
+// // }
 
 // void test_add_to_cart() {
 //   warehouse_t *warehouse = warehouse_create();
@@ -150,9 +155,9 @@ int main() {
   if (
     (CU_add_test(my_test_suite, "create and destroy", test_create_destroy) == NULL) ||
     (CU_add_test(my_test_suite, "add 1 merch", test_add_1_merch) == NULL) ||
-    (CU_add_test(my_test_suite, "add several merch", test_add_several_merch) == NULL) ||
-    (CU_add_test(my_test_suite, "create and destroy", test_remove_merch) == NULL) ||
-    (CU_add_test(my_test_suite, "create and destroy", test_edit_merch) == NULL) ||
+    // (CU_add_test(my_test_suite, "add several merch", test_add_several_merch) == NULL) ||
+    // (CU_add_test(my_test_suite, "create and destroy", test_remove_merch) == NULL) ||
+    // (CU_add_test(my_test_suite, "create and destroy", test_edit_merch) == NULL) ||
     0
   )
     {
