@@ -9,13 +9,13 @@
 #include <string.h>
 #include <stdlib.h>
 
-// static bool string_eq(elem_t a, elem_t b)
-// {
-//    if (a.s == NULL || b.s == NULL) {
-//         return a.s == b.s;
-//     }
-//     return strcmp(a.s, b.s) == 0;
-// }
+static bool string_eq(elem_t a, elem_t b)
+{
+   if (a.s == NULL || b.s == NULL) {
+        return a.s == b.s;
+    }
+    return strcmp(a.s, b.s) == 0;
+}
 
 // static size_t string_knr_hash(elem_t key)
 // {
@@ -83,11 +83,26 @@ void test_remove_merch() {
 
 void test_edit_merch() {
   warehouse_t *warehouse = warehouse_create();
-  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+
+  warehouse_add_merch("Bohnanza", "Epic board game", 200, warehouse);
   CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
-  warehouse_edit_merch(warehouse, "Small World", "New Description", 300);
+  warehouse_edit_merch("Bohnanza", "Small World", "New Description", 200, warehouse);
   CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Small World")));
   CU_ASSERT_FALSE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
+  
+  ioopm_hash_table_iterator_t *it = ioopm_hash_table_iterator_create(warehouse->merch_ht);
+  elem_t merch_value = ioopm_hash_table_iterator_current_value(it);
+  elem_t merch_key = ioopm_hash_table_iterator_current_key(it);
+  merch_t *merch = merch_value.p;
+  char *name = merch->name;
+  char *desc = merch->desc;
+  size_t price = merch->price;
+  size_t actual_price = 200;
+
+  CU_ASSERT_TRUE(string_eq(merch_key, string_elem("Small World")));
+  CU_ASSERT_TRUE(strcmp(desc, "New Description") == 0);
+  CU_ASSERT_TRUE(strcmp(name, "Small World") == 0);
+  CU_ASSERT_TRUE(price == actual_price);
 }
 
 // void test_create_empty_cart() {
