@@ -32,7 +32,7 @@ void warehouse_remove_merch(warehouse_t *wh, char *key);
 /// @param new_name merch's new name
 /// @param new_desc merch's new description
 /// @param new_price merch's new price
-void warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_desc, int *new_price);
+void warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_desc, int new_price);
 
 /// @brief list all storage locations for particular merch along with quantities 
 /// stored on each location
@@ -60,14 +60,14 @@ void warehouse_remove_cart(warehouse_t *wh, char *key);
 /// @param cart desired shopping cart
 /// @param merch desired merch to add
 /// @param quant quantity to be added
-void warehouse_add_to_cart(ioopm_hash_table_t *cart_ht, char *cart, char *merch, int *quant);
+void warehouse_add_to_cart(ioopm_hash_table_t *cart_ht, char *cart, char *merch, int quant);
 
 /// @brief removes zero or more items of some merch from specific shopping cart
 /// @param cart_ht hashtable where all shopping carts are stored
 /// @param cart desired shopping cart
 /// @param merch desired merch to remove
 /// @param quant quantity to be removed
-void warehouse_remove_from_cart(ioopm_hash_table_t *cart_ht, char *cart, char *merch, int *quant);
+void warehouse_remove_from_cart(ioopm_hash_table_t *cart_ht, char *cart, char *merch, int quant);
 
 /// @brief calculate cost of a shopping cart 
 /// @param cart_ht hash_table where all shopping carts are stored

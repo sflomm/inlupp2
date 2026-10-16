@@ -84,12 +84,12 @@ void test_remove_merch() {
 void test_edit_merch() {
   warehouse_t *warehouse = warehouse_create();
 
-  warehouse_add_merch("Bohnanza", "Epic board game", 200, warehouse);
+  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
   CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
-  warehouse_edit_merch("Bohnanza", "Small World", "New Description", 200, warehouse);
+  warehouse_edit_merch(warehouse, "Bohnanza", "Small World", "New Description", 200);
   CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Small World")));
   CU_ASSERT_FALSE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
-  
+
   ioopm_hash_table_iterator_t *it = ioopm_hash_table_iterator_create(warehouse->merch_ht);
   elem_t merch_value = ioopm_hash_table_iterator_current_value(it);
   elem_t merch_key = ioopm_hash_table_iterator_current_key(it);

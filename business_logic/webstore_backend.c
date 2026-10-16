@@ -72,23 +72,13 @@ void warehouse_list_merch(warehouse_t *wh)
   // ioopm_hash_table_t *merch_ht = wh->merch_ht;
   // ioopm_hash_table_iterator_t *merch_it = ioopm_hash_table_iterator_create(merch_ht);
   // elem_t current_key = ioopm_hash_table_iterator_current_key(merch_it);
-<<<<<<< HEAD
-  // int c = 0;
-
-  // while (!ioopm_hash_table_iterator_at_end(merch_it) && c <= 20)
-=======
   // size_t c = 0; // counter
   // while (!ioopm_hash_table_iterator_at_end(merch_it))
->>>>>>> 305bbf5cf1860a98840500e321139c2c15053e36
   // {
   //   printf("%d. %s\n", c, current_key);
   //   ioopm_hash_table_iterator_advance(merch_it);
   //   ioopm_hash_table_iterator_current_key(merch_it);
-<<<<<<< HEAD
-  //   c++;
-=======
   //   c++; // increase counter 
->>>>>>> 305bbf5cf1860a98840500e321139c2c15053e36
   // }
   (void) wh;
 }
