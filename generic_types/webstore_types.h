@@ -21,4 +21,5 @@ struct shelf {
 struct warehouse {
     ioopm_hash_table_t *merch_ht;
     ioopm_hash_table_t *location_ht;
+    ioopm_hash_table_t *cart_ht;
 };

@@ -32,10 +32,13 @@ warehouse_t *warehouse_create()
     ioopm_hash_table_t *merch_ht = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
     //table of locations
     ioopm_hash_table_t *location_ht = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
+    //table of shopping carts
+    ioopm_hash_table_t *cart_ht = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
 
     warehouse_t *warehouse = calloc(1, sizeof(warehouse_t));
     warehouse->merch_ht = merch_ht;
     warehouse->location_ht = location_ht;
+    warehouse->cart_ht = cart_ht;
 
     return warehouse;
 }
@@ -47,7 +50,7 @@ void warehouse_destroy(warehouse_t *wh)
     free(wh);
 }
 
-void warehouse_add_merch(char *name, char *desc, int price, warehouse_t *wh)
+void warehouse_add_merch(warehouse_t *wh, char *name, char *desc, int price)
 {
     // FIXME: check if merch exists
     merch_t *merch = calloc(1, sizeof(merch_t));
@@ -65,18 +68,19 @@ void warehouse_add_merch(char *name, char *desc, int price, warehouse_t *wh)
 // action code "L", "n" return to main menu
 void warehouse_list_merch(warehouse_t *wh)
 {
-  ioopm_hash_table_t *merch_ht = wh->merch_ht;
-  ioopm_hash_table_iterator_t *merch_it = ioopm_hash_table_iterator_create(merch_ht);
-  elem_t current_key = ioopm_hash_table_iterator_current_key(merch_it);
-  int c = 0;
+  // ioopm_hash_table_t *merch_ht = wh->merch_ht;
+  // ioopm_hash_table_iterator_t *merch_it = ioopm_hash_table_iterator_create(merch_ht);
+  // elem_t current_key = ioopm_hash_table_iterator_current_key(merch_it);
+  // int c = 0;
 
-  while (!ioopm_hash_table_iterator_at_end(merch_it) && c <= 20)
-  {
-    printf("%d. %s\n", c, current_key);
-    ioopm_hash_table_iterator_advance(merch_it);
-    ioopm_hash_table_iterator_current_key(merch_it);
-    c++;
-  }
+  // while (!ioopm_hash_table_iterator_at_end(merch_it) && c <= 20)
+  // {
+  //   printf("%d. %s\n", c, current_key);
+  //   ioopm_hash_table_iterator_advance(merch_it);
+  //   ioopm_hash_table_iterator_current_key(merch_it);
+  //   c++;
+  // }
+  (void) wh;
 }
 
 void warehouse_remove_merch(warehouse_t *wh, char *key)

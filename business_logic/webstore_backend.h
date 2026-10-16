@@ -1,86 +1,82 @@
 #pragma once
 typedef struct warehouse warehouse_t;
 
-/// @brief 
-/// @param 
-/// @param 
-/// @return
+/// @brief creates an empty warehouse
+/// @return a warehouse_t which hold 3 hashtables: merch, location and cart
 warehouse_t *warehouse_create();
 
-/// @brief 
-/// @param 
-/// @param 
-/// @return
+/// @brief frees the warehouse's allocated memory 
+/// @param wh the warehouse to be deleted
 void warehouse_destroy(warehouse_t *wh);
 
-/// @brief 
-/// @param 
-/// @param 
-/// @return
-void warehouse_add_merch(char *name, char *desc, int price, warehouse_t *wh);
+/// @brief add merch to the hashtable merch_ht
+/// @param wh warehouse struct
+/// @param name merch's name
+/// @param desc merch's description
+/// @param price merch's price
+void warehouse_add_merch(warehouse_t *wh, char *name, char *desc, int price);
 
-/// @brief 
-/// @param 
-/// @param 
-/// @return
-void warehouse_list_merch(warehouse_t *wh);
+/// @brief lists all current merch 20 at a time
+/// @param merch_ht hashtable that holds all merch
+void warehouse_list_merch(ioopm_hash_table_t *merch_ht);
 
-/// @brief 
-/// @param 
-/// @param 
-/// @return
+/// @brief remove merch from warehouse and it's stock
+/// @param wh warehouse
+/// @param key key to remove
 void warehouse_remove_merch(warehouse_t *wh, char *key);
 
-/// @brief 
-/// @param 
-/// @param 
-/// @return
-void warehouse_edit_merch();
+/// @brief edit merch's name, description or/and price.
+/// NOTE. stock is not affected and changing name to existing key is not allowed.
+/// @param wh warehouse
+/// @param key merch to be edited
+/// @param new_name merch's new name
+/// @param new_desc merch's new description
+/// @param new_price merch's new price
+void warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_desc, int *new_price);
 
-/// @brief 
-/// @param 
-/// @param 
-/// @return
-void warehouse_show_stock();
+/// @brief list all storage locations for particular merch along with quantities 
+/// stored on each location
+/// @param wh warehouse
+/// @param key merch's key
+void warehouse_show_stock(warehouse_t *wh, char *key);
 
-/// @brief 
-/// @param 
-/// @param 
-/// @return
-void warehouse_replenish_stock();
+/// @brief increase stock of a merch by at least one
+/// @param wh warehouse 
+/// @param key merch's key
+void warehouse_replenish_stock(warehouse_t *wh, char *key);
 
-/// @brief 
-/// @param 
-/// @param 
-/// @return
-void warehouse_create_cart();
+/// @brief creates a new shopping cart to the warehouse's hashtable for shopping carts
+/// @param wh warehouse that holds hashtable cart_ht
+/// @return a hashtable where key is merch's name and value it's quantity
+ioopm_hash_table_t warehouse_create_cart(warehouse_t *wh);
 
-/// @brief 
-/// @param 
-/// @param 
-/// @return
-void warehouse_remove_cart();
+/// @brief removes a shopping cart from the system
+/// @param wh warehouse
+/// @param key shopping cart to be removed
+void warehouse_remove_cart(warehouse_t *wh, char *key);
 
-/// @brief 
-/// @param 
-/// @param 
-/// @return
-void warehouse_add_to_cart(elem_t cart, char *key);
+/// @brief add some quantity of merch to specific shopping cart
+/// @param cart_ht hashtable where all shopping carts are stored
+/// @param cart desired shopping cart
+/// @param merch desired merch to add
+/// @param quant quantity to be added
+void warehouse_add_to_cart(ioopm_hash_table_t *cart_ht, char *cart, char *merch, int *quant);
 
-/// @brief 
-/// @param 
-/// @param 
-/// @return
-void warehouse_remove_from_cart();
+/// @brief removes zero or more items of some merch from specific shopping cart
+/// @param cart_ht hashtable where all shopping carts are stored
+/// @param cart desired shopping cart
+/// @param merch desired merch to remove
+/// @param quant quantity to be removed
+void warehouse_remove_from_cart(ioopm_hash_table_t *cart_ht, char *cart, char *merch, int *quant);
 
-/// @brief 
-/// @param 
-/// @param 
-/// @return
-void warehouse_calculate_cost();
+/// @brief calculate cost of a shopping cart 
+/// @param cart_ht hash_table where all shopping carts are stored
+/// @param cart desired shopping cart
+/// @return the cost of all merch in the shopping cart
+int warehouse_calculate_cost(ioopm_hash_table_t *cart_ht, char *cart);
 
-/// @brief 
-/// @param 
-/// @param 
-/// @return
-void warehouse_checkout();
+/// @brief user goes through purchase of all merch in specific shopping cart
+/// the stock for the merches of the cart is decreased and shopping cart is removed from system
+/// @param wh warehouse
+/// @param cart desired shopping cart
+void warehouse_checkout(warehouse_t *wh, char *cart);

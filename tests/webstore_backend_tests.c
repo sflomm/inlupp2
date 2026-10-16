@@ -56,16 +56,16 @@ void test_create_destroy()
 
 void test_add_1_merch() {
 warehouse_t *warehouse = warehouse_create();
-  warehouse_add_merch("Bohnanza", "Epic board game", 200, warehouse);
+  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
   CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
   warehouse_destroy(warehouse);
 }
  
 void test_add_several_merch() {
     warehouse_t *warehouse = warehouse_create();
-    warehouse_add_merch("Bohnanza", "Epic board game", 200, warehouse);
-    warehouse_add_merch("Catan", "Epic board game", 150, warehouse);
-    warehouse_add_merch("Small World", "Epic board game", 300, warehouse);
+    warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+    warehouse_add_merch(warehouse, "Catan", "Epic board game", 150);
+    warehouse_add_merch(warehouse, "Small World", "Epic board game", 300);
     CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
     CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Catan")));
     CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Small World")));
@@ -74,21 +74,21 @@ void test_add_several_merch() {
 
 void test_remove_merch() {
   warehouse_t *warehouse = warehouse_create();
-  warehouse_add_merch("Bohnanza", "Epic board game", 200, warehouse);
+  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
   CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
   warehouse_remove_merch(warehouse, "Bohnanza");
   CU_ASSERT_FALSE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
   warehouse_destroy(warehouse);
 } 
 
-// void test_edit_merch() {
-//   warehouse_t *warehouse = warehouse_create();
-//   warehouse_add_merch("Bohnanza", "Epic board game", 200, warehouse);
-//   CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
-//   warehouse_edit_merch("Small World", "New Description", 300, warehouse);
-//   CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Small World")));
-//   CU_ASSERT_FALSE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
-// }
+void test_edit_merch() {
+  warehouse_t *warehouse = warehouse_create();
+  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
+  warehouse_edit_merch(warehouse, "Small World", "New Description", 300);
+  CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Small World")));
+  CU_ASSERT_FALSE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
+}
 
 // void test_create_empty_cart() {
 //   warehouse_t *warehouse = warehouse_create();
@@ -136,8 +136,8 @@ int main() {
     (CU_add_test(my_test_suite, "create and destroy", test_create_destroy) == NULL) ||
     (CU_add_test(my_test_suite, "add 1 merch", test_add_1_merch) == NULL) ||
     (CU_add_test(my_test_suite, "add several merch", test_add_several_merch) == NULL) ||
-    // (CU_add_test(my_test_suite, "create and destroy", test_remove_merch) == NULL) ||
-    // (CU_add_test(my_test_suite, "create and destroy", test_edit_merch) == NULL) ||
+    (CU_add_test(my_test_suite, "create and destroy", test_remove_merch) == NULL) ||
+    (CU_add_test(my_test_suite, "create and destroy", test_edit_merch) == NULL) ||
     0
   )
     {
