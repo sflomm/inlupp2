@@ -1,15 +1,20 @@
 #pragma once
-#include "../generic_types/webstore_types.h"
-#include "../generic_types/common.h"
-#include "../generic_types/hash_table_struct.h"
+typedef struct warehouse warehouse_t;
 
 /// @brief creates an empty warehouse
-/// @return a warehouse_t which hold 2 hashtables: merch & location and 1 linked list: cart_list
+/// @return a warehouse_t which hold 3 hashtables: merch, location and cart
 warehouse_t *warehouse_create();
 
 /// @brief frees the warehouse's allocated memory 
 /// @param wh the warehouse to be deleted
 void warehouse_destroy(warehouse_t *wh);
+
+
+/// @brief find specific merch
+/// @param wh warehouse struct
+/// @param key merch's key
+/// @return the desired merch or NULL if not found
+merch_t *find_merch(warehouse_t *wh, char *key);
 
 /// @brief add merch to the hashtable merch_ht
 /// @param wh warehouse struct
@@ -45,7 +50,9 @@ void warehouse_show_stock(warehouse_t *wh, char *key);
 /// @brief increase stock of a merch by at least one
 /// @param wh warehouse 
 /// @param key merch's key
-void warehouse_replenish_stock(warehouse_t *wh, char *key);
+/// @param quant quantity to add
+/// @return total amount of stock of specific merch
+size_t warehouse_replenish_stock(warehouse_t *wh, char *key, int quant);
 
 /// @brief creates a new shopping cart to the warehouse's hashtable for shopping carts
 /// @param wh warehouse that holds hashtable cart_ht
@@ -58,25 +65,25 @@ ioopm_hash_table_t warehouse_create_cart(warehouse_t *wh);
 void warehouse_remove_cart(warehouse_t *wh, char *key);
 
 /// @brief add some quantity of merch to specific shopping cart
-/// @param carts struct with field linked_list storing all carts and id which counts amount of created carts
+/// @param cart_ht hashtable where all shopping carts are stored
 /// @param cart desired shopping cart
 /// @param merch desired merch to add
 /// @param quant quantity to be added
-void warehouse_add_to_cart(shopping_cart_t *carts, char *cart, char *merch, int quant);
-
+void warehouse_add_to_cart(ioopm_hash_table_t *cart_ht, char *cart, char *merch, int quant);
 
 /// @brief removes zero or more items of some merch from specific shopping cart
 /// @param cart_ht hashtable where all shopping carts are stored
 /// @param cart desired shopping cart
 /// @param merch desired merch to remove
 /// @param quant quantity to be removed
-void warehouse_remove_from_cart(ioopm_list_t *cart_list, char *cart, char *merch, int quant);
+void warehouse_remove_from_cart(ioopm_hash_table_t *cart_ht, char *cart, char *merch, int quant);
 
 /// @brief calculate cost of a shopping cart 
 /// @param cart_ht hash_table where all shopping carts are stored
 /// @param cart desired shopping cart
+// FIXME: is size_t always an integer?
 /// @return the cost (positive integer) of all merch in the shopping cart
-double warehouse_calculate_cost(ioopm_list_t *cart_list, char *cart);
+size_t warehouse_calculate_cost(ioopm_hash_table_t *cart_ht, char *cart);
 
 /// @brief user goes through purchase of all merch in specific shopping cart
 /// the stock for the merches of the cart is decreased and shopping cart is removed from system

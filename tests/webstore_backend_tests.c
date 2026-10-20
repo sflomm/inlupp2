@@ -105,12 +105,38 @@ void test_edit_merch() {
   CU_ASSERT_TRUE(price == actual_price);
 }
 
-test_create_empty_() {
+test_find_merch()
+{
   warehouse_t *warehouse = warehouse_create();
-  ioopm_hash_table_t *cart = warehouse_create_cart(warehouse);
-  CU_ASSERT_TRUE(ioopm_hash_table_is_empty(cart));
+  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  merch_t *merch = find_merch(warehouse, "Bohnanza");
+  char *name = merch->name;
+  char *desc = merch->desc;
+  size_t price = merch->price;
+  size_t actual_price = 200;
+
+  CU_ASSERT_EQUAL(price, actual_price);
+  CU_ASSERT_EQUAL(name, "Bohnanza");
+  CU_ASSERT_EQUAL(desc, "Epic board game");
+  
+  warehouse_destroy(warehouse);
+}
+
+test_replenish_stock()
+{
+  warehouse_t *warehouse = warehouse_create();
+  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  warehouse_replenish_stock
 
 }
+
+
+// test_create_empty_() {
+//   warehouse_t *warehouse = warehouse_create();
+//   ioopm_hash_table_t *cart = warehouse_create_cart(warehouse);
+//   CU_ASSERT_TRUE(ioopm_hash_table_is_empty(cart));
+
+// }
 
 
 // // }

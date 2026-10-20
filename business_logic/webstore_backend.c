@@ -82,6 +82,28 @@ void warehouse_destroy(warehouse_t *wh) {
   free(wh);
 }
 
+// FIXME: asserts? får man skicka in ett tomt varuhus?
+merch_t *find_merch(warehouse_t *wh, char *key)
+{
+  ioopm_hash_table_t *ht = wh->merch_ht;
+  ioopm_hash_table_iterator_t *it = ioopm_hash_table_iterator_create(ht);
+  merch_t *current_merch;
+
+  while (!ioopm_hash_table_iterator_at_end(it))
+  {
+    if (ioopm_hash_table_iterator_current_key == key)
+    {
+      current_merch = it->current_entry->value.p;
+      return current_merch; 
+    }
+    else 
+    {
+      ioopm_list_iterator_advance(it);
+    }
+  }
+  return NULL;
+}
+
 void warehouse_add_merch(warehouse_t *wh, char *name, char *desc, int price)
 {
     // FIXME: check if merch exists
@@ -136,11 +158,13 @@ void warehouse_show_stock(warehouse_t *wh, char *key)
   (void) key;
 }
 
-void warehouse_replenish_stock(warehouse_t *wh, char *key)
+size_t warehouse_replenish_stock(warehouse_t *wh, char *key, int quant)
 {
   // TODO: Stub  
   (void) wh;
   (void) key;
+  (void) quant;
+  return 0;
 }
 
 size_t warehouse_create_cart(warehouse_t *wh)
