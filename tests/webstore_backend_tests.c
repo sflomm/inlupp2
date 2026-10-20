@@ -105,7 +105,7 @@ void test_edit_merch() {
   CU_ASSERT_TRUE(price == actual_price);
 }
 
-test_find_merch()
+void test_find_merch()
 {
   warehouse_t *warehouse = warehouse_create();
   warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
@@ -122,7 +122,7 @@ test_find_merch()
   warehouse_destroy(warehouse);
 }
 
-test_replenish_stock()
+void test_replenish_stock()
 {
   warehouse_t *warehouse = warehouse_create();
   warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
