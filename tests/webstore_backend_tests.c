@@ -105,13 +105,12 @@ void test_edit_merch() {
   CU_ASSERT_TRUE(price == actual_price);
 }
 
-// test_create_empty_cart() {
-// warehouse_t *warehouse = warehouse_create();
-// ioopm_hash_table_t *cart = warehouse_create_cart(warehouse);
-// CU_ASSERT_TRUE(ioopm_hash_table_is_empty(cart));
+test_create_empty_cart() {
+  warehouse_t *warehouse = warehouse_create();
+  ioopm_hash_table_t *cart = warehouse_create_cart(warehouse);
+  CU_ASSERT_TRUE(ioopm_hash_table_is_empty(cart));
 
-// ioop
-// }
+}
 
 
 // // }
