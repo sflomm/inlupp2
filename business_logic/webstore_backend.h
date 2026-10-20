@@ -1,5 +1,7 @@
 #pragma once
 #include "../generic_types/webstore_types.h"
+#include "../generic_types/common.h"
+#include "../generic_types/hash_table_struct.h"
 
 /// @brief creates an empty warehouse
 /// @return a warehouse_t which hold 2 hashtables: merch & location and 1 linked list: cart_list

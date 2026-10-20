@@ -143,10 +143,24 @@ void warehouse_replenish_stock(warehouse_t *wh, char *key)
   (void) key;
 }
 
-ioopm_hash_table_t warehouse_create_cart(warehouse_t *wh)
+size_t warehouse_create_cart(warehouse_t *wh)
 {
-  // ioopm_hash_table_t *cart = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
-  (void) wh;
+    shopping_cart_t *cart = calloc(1, sizeof(*cart));
+
+    cart->count = wh->carts->count++;
+
+    cart->items = ioopm_hash_table_create(
+        string_knr_hash,
+        simple_knr_eq
+    );
+
+    ioopm_list_insert(
+        wh->carts->cart_list,
+        0,
+        ptr_elem(cart)
+    );
+
+    return cart->id;
 }
 
 

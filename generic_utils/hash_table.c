@@ -48,10 +48,10 @@ static entry_t *find_previous_entry(ioopm_hash_table_t *ht, elem_t key)
 static void destroy_linked_list(entry_t *entry)
 {
   entry_t *next = entry_destroy(entry);
-
   while (next != NULL)
   {
     next = entry_destroy(next);
+    destroy_linked_list(entry);
   }
 }
 
@@ -186,6 +186,7 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t value)
 
 bool ioopm_hash_table_lookup(ioopm_hash_table_t *ht, elem_t key, elem_t *result)
 {
+  
   entry_t *previous = find_previous_entry(ht, key);
 
   // if the key exists, return the value, otherwise the lookup failed

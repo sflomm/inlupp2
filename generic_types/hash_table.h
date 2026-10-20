@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include "common.h"
+#include "hash_table_struct.h"
 
 /**
 * @file hash_table.h
@@ -14,8 +15,6 @@
 * or by an at symbol @@.
 *
 */
-
-typedef struct hash_table ioopm_hash_table_t;
 
 /// @brief Create a new hash table with homogenous keys
 /// @param hash_fn hash function that specifies type of key-elements

@@ -2,6 +2,7 @@
 #define No_Buckets 17
 
 typedef struct entry entry_t;
+typedef struct hash_table ioopm_hash_table_t;
 
 struct entry
 {
