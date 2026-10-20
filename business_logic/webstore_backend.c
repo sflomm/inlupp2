@@ -6,6 +6,7 @@
 #include "../generic_types/hash_table_iterator.h"
 #include "../generic_types/linked_list_struct.h"
 #include "../generic_types/linked_list.h"
+#include "../generic_types/list_iterator.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -45,7 +46,7 @@ warehouse_t *warehouse_create()
     warehouse->location_ht = location_ht;
     warehouse->carts = carts;
     warehouse->carts->cart_list = cart_list;
-    warehouse->carts->id = 0;
+    warehouse->carts->count = 0;
     
     return warehouse;
 }
@@ -143,17 +144,17 @@ void warehouse_replenish_stock(warehouse_t *wh, char *key)
   (void) key;
 }
 
-size_t warehouse_create_cart(warehouse_t *wh)
+shopping_cart_t warehouse_create_cart(warehouse_t *wh)
 {
-    shopping_cart_t *cart = calloc(1, sizeof(*cart));
+  wh->carts->count++;  
 
-    wh->carts->count++;
-
+  shopping_cart_t *cart = calloc(1, sizeof(*cart));
+    cart->id = wh->carts->count;
     cart->items = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
 
     ioopm_list_insert(wh->carts->cart_list, 0, ptr_elem(cart));
 
-    return cart->id;
+    return *cart;
 }
 
 
@@ -163,20 +164,42 @@ void warehouse_remove_cart(warehouse_t *wh, char *key)
   (void) wh;
   (void) key;
 }
-
-void warehouse_add_to_cart(ioopm_hash_table_t *cart_ht, char *cart, char *merch, int quant)
+bool warehouse_add_to_cart(warehouse_t *wh, size_t cart_id,
+                           char *merch, int quant)
 {
-  ioopm_hash_table_t *cart = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
-    ioopm_hash_table_insert
+    // Check if merch exists
+    if (!ioopm_hash_table_has_key(wh->merch_ht, string_elem(merch)))
+    {
+        return false;
+    }
+
+    ioopm_list_iterator_t *it =
+        ioopm_list_iterator_create(wh->carts->cart_list);
+
+    while (!ioopm_list_iterator_at_end(it))
+    {
+        elem_t value = ioopm_list_iterator_current(it);
+        shopping_cart_t *value_cart = value.p;
+
+        if (value_cart->id == cart_id)
+        {
+            ioopm_hash_table_insert(value_cart->items, string_elem(merch), int_elem(quant));
+
+            ioopm_list_iterator_destroy(it);
+            return true;
+        }
+
+        ioopm_list_iterator_advance(it);
+    }
+    
+    //merch doesnt exist in wh
+    ioopm_list_iterator_destroy(it);
+    return false;
 }
 
 void warehouse_remove_from_cart(ioopm_hash_table_t *cart_ht, char *cart, char *merch, int quant)
 {
-  // TODO: Stub
-  (void) cart_ht;
-  (void) cart;
-  (void) merch;
-  (void) quant;
+
 }
 
 size_t warehouse_calculate_cost(ioopm_hash_table_t *cart_ht, char *cart)
