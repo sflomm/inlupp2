@@ -55,6 +55,17 @@ static void destroy_linked_list(entry_t *entry)
   }
 }
 
+// static void destroy_linked_list(entry_t *entry)
+// {
+//     if (entry == NULL)
+//     {
+//         return;
+//     }
+
+//     entry_t *next = entry_destroy(entry);
+//     destroy_linked_list(next);
+// }
+
 
 // IOOPM FUNCTIONS
 

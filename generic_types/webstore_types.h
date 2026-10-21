@@ -17,7 +17,7 @@ struct merch {
 
 struct shelf {
     char *shelf;
-    ioopm_list_t ;
+    size_t *quant;
 };
 
 struct shopping_cart {

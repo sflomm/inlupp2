@@ -109,7 +109,7 @@ void test_find_merch()
 {
   warehouse_t *warehouse = warehouse_create();
   warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
-  merch_t *merch = find_merch(warehouse, "Bohnanza");
+  merch_t *merch = warehouse_find_merch(warehouse, "Bohnanza");
   char *name = merch->name;
   char *desc = merch->desc;
   size_t price = merch->price;

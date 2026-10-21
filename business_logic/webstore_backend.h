@@ -14,7 +14,7 @@ void warehouse_destroy(warehouse_t *wh);
 /// @param wh warehouse struct
 /// @param key merch's key
 /// @return the desired merch or NULL if not found
-merch_t *find_merch(warehouse_t *wh, char *key);
+merch_t *warehouse_find_merch(warehouse_t *wh, char *key);
 
 /// @brief add merch to the hashtable merch_ht
 /// @param wh warehouse struct
@@ -49,10 +49,11 @@ void warehouse_show_stock(warehouse_t *wh, char *key);
 
 /// @brief increase stock of a merch by at least one
 /// @param wh warehouse 
-/// @param key merch's key
+/// @param shelf desired shelf
+/// @param merch desired merch to increase
 /// @param quant quantity to add
 /// @return total amount of stock of specific merch
-size_t warehouse_replenish_stock(warehouse_t *wh, char *key, int quant);
+void warehouse_replenish_stock(warehouse_t *wh, char *shelf, merch_t *merch, int quant);
 
 /// @brief creates a new shopping cart to the warehouse's hashtable for shopping carts
 /// @param wh warehouse that holds hashtable cart_ht
