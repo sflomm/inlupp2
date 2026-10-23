@@ -13,6 +13,7 @@ struct merch {
     char *desc;
     size_t price;
     ioopm_list_t *locs;
+    size_t stock;
 };
 
 struct shelf {
