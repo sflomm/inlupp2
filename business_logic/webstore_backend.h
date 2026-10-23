@@ -77,7 +77,7 @@ void warehouse_add_to_cart(ioopm_hash_table_t *cart_ht, char *cart, char *merch,
 /// @param cart desired shopping cart
 /// @param merch desired merch to remove
 /// @param quant quantity to be removed
-void warehouse_remove_from_cart(ioopm_hash_table_t *cart_ht, char *cart, char *merch, size_t quant);
+void warehouse_remove_from_cart(warehouse_t *wh, char *cart, char *merch, size_t quant);
 
 /// @brief calculate cost of a shopping cart 
 /// @param cart_ht hash_table where all shopping carts are stored
