@@ -7,6 +7,8 @@
 
 typedef struct warehouse warehouse_t;
 
+// merch_stock.c FUNCTIONS (1-6)
+
 /// @brief creates an empty warehouse
 /// @return a warehouse_t which hold 3 hashtables: merch, location and cart
 warehouse_t *warehouse_create();
@@ -14,7 +16,6 @@ warehouse_t *warehouse_create();
 /// @brief frees the warehouse's allocated memory 
 /// @param wh the warehouse to be deleted
 void warehouse_destroy(warehouse_t *wh);
-
 
 /// @brief find specific merch
 /// @param wh warehouse struct
@@ -60,6 +61,9 @@ void warehouse_show_stock(warehouse_t *wh, char *key);
 /// @param quant quantity to add
 /// @return total amount of stock of specific merch
 void warehouse_replenish_stock(warehouse_t *wh, char *shelf, merch_t *merch, size_t quant);
+
+
+// cart_calc.c FUNCTIONS (7-12)
 
 /// @brief creates a new shopping cart to the warehouse's hashtable for shopping carts
 /// @param wh warehouse that holds hashtable cart_ht
