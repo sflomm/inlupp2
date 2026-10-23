@@ -37,7 +37,8 @@ void warehouse_list_merch(ioopm_hash_table_t *merch_ht);
 /// @brief remove merch from warehouse and it's stock
 /// @param wh warehouse
 /// @param key key to remove
-void warehouse_remove_merch(warehouse_t *wh, char *key);
+/// @return true if removed, false if not
+bool warehouse_remove_merch(warehouse_t *wh, char *key);
 
 /// @brief edit merch's name, description or/and price.
 /// NOTE. stock is not affected and changing name to existing key is not allowed.

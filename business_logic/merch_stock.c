@@ -1,11 +1,10 @@
 #include "../generic_types/hash_table.h"
-#include "../generic_types/common.h"
 #include "../generic_types/hash_table_struct.h"
 #include "../generic_types/hash_table_iterator.h"
 #include "../generic_types/linked_list_struct.h"
 #include "../generic_types/linked_list.h"
 #include "../generic_types/list_iterator.h"
-#include "../generic_types/hash_table_iterator.h"
+#include "../generic_types/common.h"
 #include "webstore_types.h"
 #include "webstore_backend.h"
 
@@ -126,7 +125,7 @@ void warehouse_add_merch(warehouse_t *wh, char *name, char *desc, size_t price)
     ioopm_hash_table_insert(wh->merch_ht, string_elem(name), ptr_elem(merch));
 }
 
-// TODO, inte klar
+// TODO, inte klar, inget test behövs skrivas
 // void warehouse_list_merch(warehouse_t *wh)
 // {
 //   (void) wh;
@@ -155,21 +154,46 @@ void warehouse_add_merch(warehouse_t *wh, char *name, char *desc, size_t price)
   
 // }
 
-void warehouse_remove_merch(warehouse_t *wh, char *key)
+bool warehouse_remove_merch(warehouse_t *wh, char *key)
 {
-  // TODO: måste frigöra alla pekare
-  (void) wh;
-  (void) key;
+  merch_t *merch = warehouse_find_merch(wh, key);
+  if (merch == NULL)
+  {
+    return false;
+  }
+  ioopm_hash_table_remove(wh->merch_ht, string_elem(key));
+  return true;
 }
 
 void warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_desc, size_t new_price)
 {
-  // TODO: Stub
-  (void) wh;
-  (void) key;
-  (void) new_name;
-  (void) new_desc;
-  (void) new_price;
+  
+  merch_t *merch = warehouse_find_merch(wh, key);
+  if (merch == NULL)
+  {
+    // puts("Merch not found.\n");
+    return;
+  }
+
+  merch_t *merch_new_name = warehouse_find_merch(wh, new_name);
+  if (merch_new_name != NULL)
+  {
+    // puts("Merch with new suggested name already exists.\n");
+    return;
+  }
+
+  if (strcmp(key, new_name) != 0)
+  {
+    merch_t *new_merch = ioopm_hash_table_remove(wh->merch_ht, string_elem(key)).p;
+    new_merch->desc = new_desc;
+    new_merch->price = new_price;
+    ioopm_hash_table_insert(wh->merch_ht, string_elem(new_name), ptr_elem(new_merch));
+  }
+  else
+  {
+    merch->desc = new_desc;
+    merch->price = new_price;
+  }
 }
 
 void warehouse_show_stock(warehouse_t *wh, char *key)
