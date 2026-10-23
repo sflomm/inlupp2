@@ -7,6 +7,7 @@
   #define bool_elem(x)   ((elem_t) { .b = (x) })
   #define ptr_elem(x)    ((elem_t) { .p = (x) })
   #define string_elem(x) ((elem_t) { .s = (x) })
+  #define size_elem(x)   ((elem_t) { .si = (x) })
 
 
   typedef union elem
@@ -17,6 +18,7 @@
       float f;
       void *p;
       char *s;
+      size_t si;
   } elem_t;
 
 typedef bool ioopm_eq_function(elem_t a, elem_t b);

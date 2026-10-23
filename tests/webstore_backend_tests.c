@@ -4,7 +4,7 @@
 #include "../generic_types/linked_list.h"
 #include "../generic_types/list_iterator.h"
 #include "../business_logic/webstore_backend.h"
-#include "../generic_types/webstore_types.h"
+#include "../business_logic/webstore_types.h"
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
