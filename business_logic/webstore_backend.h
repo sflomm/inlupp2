@@ -1,4 +1,11 @@
 #pragma once
+
+#include "webstore_types.h"
+#include "../generic_types/hash_table_struct.h"
+#include "../generic_types/linked_list_struct.h"
+#include "../generic_types/common.h"
+
+
 typedef struct warehouse warehouse_t;
 
 /// @brief creates an empty warehouse

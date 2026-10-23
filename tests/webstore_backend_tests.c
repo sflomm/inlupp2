@@ -122,13 +122,11 @@ void test_find_merch()
   warehouse_destroy(warehouse);
 }
 
-void test_replenish_stock()
-{
-  warehouse_t *warehouse = warehouse_create();
-  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
-  warehouse_replenish_stock
-
-}
+// void test_replenish_stock()
+// {
+//   warehouse_t *warehouse = warehouse_create();
+//   warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+// }
 
 
 // test_create_empty_() {
