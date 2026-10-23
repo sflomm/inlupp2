@@ -5,7 +5,6 @@
 #include "../generic_types/linked_list_struct.h"
 #include "../generic_types/common.h"
 
-
 typedef struct warehouse warehouse_t;
 
 /// @brief creates an empty warehouse
