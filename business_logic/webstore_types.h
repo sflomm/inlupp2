@@ -12,7 +12,6 @@ struct merch {
     char *name;
     char *desc;
     size_t price;
-    size_t stock;
     ioopm_list_t *locs;
     size_t stock;
 };

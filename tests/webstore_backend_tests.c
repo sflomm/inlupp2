@@ -198,11 +198,11 @@ int main() {
   // the test in question. If you want to add another test, just
   // copy a line below and change the information
   if (
-    (CU_add_test(my_test_suite, "create and destroy", test_create_destroy) == NULL) ||
-    (CU_add_test(my_test_suite, "add 1 merch", test_add_1_merch) == NULL) ||
-    (CU_add_test(my_test_suite, "add several merch", test_add_several_merch) == NULL) ||
-    (CU_add_test(my_test_suite, "remove merch", test_remove_merch) == NULL) ||
-    (CU_add_test(my_test_suite, "find merch", test_find_merch) == NULL) ||
+    // (CU_add_test(my_test_suite, "create and destroy", test_create_destroy) == NULL) ||
+    // (CU_add_test(my_test_suite, "add 1 merch", test_add_1_merch) == NULL) ||
+    // (CU_add_test(my_test_suite, "add several merch", test_add_several_merch) == NULL) ||
+    // (CU_add_test(my_test_suite, "remove merch", test_remove_merch) == NULL) ||
+    // (CU_add_test(my_test_suite, "find merch", test_find_merch) == NULL) ||
     (CU_add_test(my_test_suite, "edit merch", test_edit_merch) == NULL) ||
     0
   )

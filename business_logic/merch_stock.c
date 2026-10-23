@@ -165,6 +165,12 @@ bool warehouse_remove_merch(warehouse_t *wh, char *key)
   return true;
 }
 
+static void warehouse_destroy_one_merch(warehouse_t *wh, merch_t *merch)
+{
+  // TODO: Stub
+  (void) wh;
+  (void) merch;
+}
 void warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_desc, size_t new_price)
 {
   
@@ -175,16 +181,17 @@ void warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_
     return;
   }
 
-  merch_t *merch_new_name = warehouse_find_merch(wh, new_name);
-  if (merch_new_name != NULL)
-  {
-    // puts("Merch with new suggested name already exists.\n");
-    return;
-  }
-
   if (strcmp(key, new_name) != 0)
   {
+    if (warehouse_find_merch(wh, new_name) != NULL)
+    {
+      // puts("Merch with new suggested name already exists.\n");
+      return;
+    }
+
     merch_t *new_merch = ioopm_hash_table_remove(wh->merch_ht, string_elem(key)).p;
+    // TODO: behöver en funktion som frigör merch, inte bara value structen
+    new_merch->name = new_name;
     new_merch->desc = new_desc;
     new_merch->price = new_price;
     ioopm_hash_table_insert(wh->merch_ht, string_elem(new_name), ptr_elem(new_merch));
