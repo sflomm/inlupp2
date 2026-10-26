@@ -118,38 +118,49 @@ void test_edit_merch() {
   CU_ASSERT_TRUE(strcmp(merch->name, "Bohnanza") == 0);
   CU_ASSERT_TRUE(strcmp(merch->desc, "New Description") == 0);
   CU_ASSERT_TRUE(merch->price == new_price);
-  // CU_ASSERT_TRUE(strcmp(merch->desc, "Epic board game") == 0);
-  // CU_ASSERT_TRUE(merch->price == 200);
-
 
   // case 2, new name
   // TODO: check stock in a later test to see that it is unchanged
 
-  // CU_ASSERT_FALSE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
-
-  // ioopm_hash_table_iterator_t *it = ioopm_hash_table_iterator_create(warehouse->merch_ht);
-  // elem_t merch_value = ioopm_hash_table_iterator_current_value(it);
-  // elem_t merch_key = ioopm_hash_table_iterator_current_key(it);
-  // merch_t *merch = merch_value.p;
-  // char *name = merch->name;
-  // char *desc = merch->desc;
-  // size_t price = merch->price;
-  // size_t actual_price = 200;
-
-  // CU_ASSERT_TRUE(string_eq(merch_key, string_elem("Small World")));
-  // CU_ASSERT_TRUE(strcmp(desc, "New Description") == 0);
-  // CU_ASSERT_TRUE(strcmp(name, "Small World") == 0);
-  // CU_ASSERT_TRUE(price == actual_price);
+  warehouse_edit_merch(warehouse, "Bohnanza", "Catan", "New Description", new_price);
+  CU_ASSERT_FALSE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
+  CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Catan")));
+  merch_t *merch2 = warehouse_find_merch(warehouse, "Catan");
+  CU_ASSERT_TRUE(strcmp(merch2->name, "Catan") == 0);
+  CU_ASSERT_TRUE(strcmp(merch2->desc, "New Description") == 0);
+  CU_ASSERT_TRUE(merch2->price == new_price);
   
   warehouse_destroy(warehouse);
 }
 
-// void test_replenish_stock()
-// {
-//   warehouse_t *warehouse = warehouse_create();
-//   warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
-// }
+void test_replenish_stock()
+{
+  warehouse_t *warehouse = warehouse_create();
+  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  merch_t *merch = warehouse_find_merch(warehouse, "Bohnanza");
+  size_t quant = 2;
+  warehouse_replenish_stock(warehouse, "A1", merch, quant);
+  CU_ASSERT_EQUAL(merch->stock, quant);
 
+  ioopm_list_t *locs = merch->locs;
+  ioopm_list_iterator_t *iter = ioopm_list_iterator_create(locs);
+  bool found = false;
+
+  while (!ioopm_list_iterator_at_end(iter) || !found)
+  {
+    char *current = ioopm_list_iterator_current(iter).s;
+    if (strcmp(current, "A1") == 0)
+    {
+      found = true;
+    }
+  }
+
+  CU_ASSERT_TRUE(found);
+
+  ioopm_list_destroy(locs);
+  ioopm_list_iterator_destroy(iter);
+  warehouse_destroy(warehouse);
+}
 
 // test_create_empty_() {
 //   warehouse_t *warehouse = warehouse_create();
@@ -198,12 +209,13 @@ int main() {
   // the test in question. If you want to add another test, just
   // copy a line below and change the information
   if (
-    // (CU_add_test(my_test_suite, "create and destroy", test_create_destroy) == NULL) ||
-    // (CU_add_test(my_test_suite, "add 1 merch", test_add_1_merch) == NULL) ||
-    // (CU_add_test(my_test_suite, "add several merch", test_add_several_merch) == NULL) ||
-    // (CU_add_test(my_test_suite, "remove merch", test_remove_merch) == NULL) ||
-    // (CU_add_test(my_test_suite, "find merch", test_find_merch) == NULL) ||
+    (CU_add_test(my_test_suite, "create and destroy", test_create_destroy) == NULL) ||
+    (CU_add_test(my_test_suite, "add 1 merch", test_add_1_merch) == NULL) ||
+    (CU_add_test(my_test_suite, "add several merch", test_add_several_merch) == NULL) ||
+    (CU_add_test(my_test_suite, "remove merch", test_remove_merch) == NULL) ||
+    (CU_add_test(my_test_suite, "find merch", test_find_merch) == NULL) ||
     (CU_add_test(my_test_suite, "edit merch", test_edit_merch) == NULL) ||
+    (CU_add_test(my_test_suite, "replenish stock", test_replenish_stock) == NULL) ||
     0
   )
     {

@@ -32,7 +32,7 @@ void warehouse_add_merch(warehouse_t *wh, char *name, char *desc, size_t price);
 
 /// @brief lists all current merch 20 at a time
 /// @param merch_ht hashtable that holds all merch
-void warehouse_list_merch(ioopm_hash_table_t *merch_ht);
+void warehouse_list_merch(warehouse_t *wh);
 
 /// @brief remove merch from warehouse and it's stock
 /// @param wh warehouse
