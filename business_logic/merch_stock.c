@@ -150,14 +150,14 @@ void warehouse_list_merch(warehouse_t *wh)
 {
   ioopm_hash_table_t *merch_ht = wh->merch_ht;
   ioopm_hash_table_iterator_t *merch_it = ioopm_hash_table_iterator_create(merch_ht);
-  int c = 0;
+  int amount_of_merch = 0;
 
   while (!ioopm_hash_table_iterator_at_end(merch_it))
   {
     char *current_key = ioopm_hash_table_iterator_current_key(merch_it).s;
-    printf("%d. %s\n", c, current_key);
+    printf("%d. %s\n", amount_of_merch, current_key);
     ioopm_hash_table_iterator_advance(merch_it);
-    c++;
+    amount_of_merch++;
   }
 }
 
