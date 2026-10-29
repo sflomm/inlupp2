@@ -43,7 +43,6 @@ warehouse_t *warehouse_create()
     carts_t *carts = calloc(1, sizeof(carts_t));
     //table of shopping carts
     ioopm_list_t *carts_list = ioopm_list_create();
-    
 
     warehouse_t *warehouse = calloc(1, sizeof(warehouse_t));
     warehouse->merch_ht = merch_ht;
@@ -53,6 +52,23 @@ warehouse_t *warehouse_create()
     warehouse->carts->count = 0;
     
     return warehouse;
+}
+
+// free allocated memory for locations-list with struct shelf_t
+static void warehouse_destroy_locations(ioopm_list_t *list)
+{
+    link_t *current_link = list->first;
+    link_t *current_next;
+    
+    while (current_link != NULL)
+    {
+        current_next = current_link->next;
+        free(current_link->element.p); 
+        free(current_link);
+        current_link = current_next;    
+    }
+    
+    free(list);
 }
 
 // free allocated memory for merch struct
@@ -68,7 +84,7 @@ static void warehouse_destroy_all_merch(warehouse_t *wh) {
       // Free locations if the merchandise owns this list
       if (merch->locs != NULL)
       {
-          ioopm_list_destroy(merch->locs);
+          warehouse_destroy_locations(merch->locs);
       }
 
       free(merch);
@@ -79,7 +95,7 @@ static void warehouse_destroy_all_merch(warehouse_t *wh) {
   ioopm_hash_table_iterator_destroy(it);
 }
 
-static void warehouse_destroy_one_merch(warehouse_t *wh, merch_t *merch)
+static void warehouse_destroy_one_merch(merch_t *merch)
 {
   if (merch == NULL)
   {
@@ -88,7 +104,7 @@ static void warehouse_destroy_one_merch(warehouse_t *wh, merch_t *merch)
 
  if (merch->locs != NULL)
  {
-  ioopm_list_destroy(merch->locs);
+  warehouse_destroy_locations(merch->locs);
  }
 
   free(merch);
@@ -128,18 +144,13 @@ merch_t *warehouse_find_merch(warehouse_t *wh, char *key)
   return NULL;
 }
 
-static bool warehouse_merch_exists(warehouse_t *wh, char *key)
-{
-  return ioopm_hash_table_has_key(wh->merch_ht, string_elem(key));
-}
-
 void warehouse_add_merch(warehouse_t *wh, char *name, char *desc, size_t price)
 {        
     merch_t *merch = calloc(1, sizeof(merch_t));
     merch->name = name;
     merch->desc = desc;
     merch->price = price;
-    merch->locs = NULL;
+    merch->locs = ioopm_list_create();
   
     ioopm_hash_table_insert(wh->merch_ht, string_elem(name), ptr_elem(merch));
 }
@@ -152,13 +163,18 @@ void warehouse_list_merch(warehouse_t *wh)
   ioopm_hash_table_iterator_t *merch_it = ioopm_hash_table_iterator_create(merch_ht);
   int amount_of_merch = 0;
 
-  while (!ioopm_hash_table_iterator_at_end(merch_it))
+  // prints 20 merch
+  while (!ioopm_hash_table_iterator_at_end(merch_it) && amount_of_merch < 20)
   {
     char *current_key = ioopm_hash_table_iterator_current_key(merch_it).s;
-    printf("%d. %s\n", amount_of_merch, current_key);
+    printf("%d. %s\n", amount_of_merch + 1, current_key);
     ioopm_hash_table_iterator_advance(merch_it);
     amount_of_merch++;
   }
+
+  // UI: would you like to print 20 more? 
+  // while answer != "n/N" -> kör loop och printa 20 varje gång tills slutet av hash tablets slut.
+
 }
 
 bool warehouse_remove_merch(warehouse_t *wh, char *key)
@@ -168,7 +184,7 @@ bool warehouse_remove_merch(warehouse_t *wh, char *key)
   {
     return false;
   }
-  warehouse_destroy_one_merch(wh, merch);
+  warehouse_destroy_one_merch(merch);
   ioopm_hash_table_remove(wh->merch_ht, string_elem(key));
   return true;
 }
@@ -214,61 +230,56 @@ void warehouse_show_stock(warehouse_t *wh, char *key)
   {
     link_t *current_link = ioopm_list_iterator_current(it).p;
     shelf_t *current_shelf = current_link->element.p;
-    int quant = current_shelf->quant; // FIXME: osäker på hur man gör size_t till int??
+    size_t quant = current_shelf->quant;
     char *shelf = current_shelf->shelf;
     printf("Shelf: %s. Stock: %d\n", shelf, quant);
     ioopm_list_iterator_advance(it);
   }
+
   ioopm_list_iterator_destroy(it);
 }
 
 static shelf_t *warehouse_find_shelf(ioopm_list_t *list, char *shelf)
 {
+  shelf_t *result = NULL; 
+  if (list == NULL)
+  {
+    return result;
+  }
+
   ioopm_list_iterator_t *it = ioopm_list_iterator_create(list);
   while (!ioopm_list_iterator_at_end(it))
   {
-    link_t *current_link = ioopm_list_iterator_current(it).p;
-    shelf_t *current_shelf = current_link->element.p;
+    shelf_t *current_shelf = ioopm_list_iterator_current(it).p;
     char *shelf_name = current_shelf->shelf;
 
     if (strcmp(shelf_name, shelf) == 0)
     {
-      return current_shelf;
+      result = current_shelf;
+      break;
     }
     ioopm_list_iterator_advance(it);
   }
 
   ioopm_list_iterator_destroy(it);
-  return NULL;
+  return result;
 }
-
 
 void warehouse_replenish_stock(warehouse_t *wh, char *shelf, merch_t *merch, size_t add_quant)
 {
-  if (warehouse_find_shelf == NULL)
+  shelf_t *shelf_to_replenish = warehouse_find_shelf(merch->locs, shelf);
+
+  if (shelf_to_replenish == NULL) // shelf finns inte
   {
     shelf_t *new_shelf = calloc(1, sizeof(shelf_t)); // FIXME: kom ihåg att frigöra shelfen, kanske redan görs i destroy?
     new_shelf->shelf = shelf;
     new_shelf->quant = add_quant;
-    ioopm_list_insert(merch->locs, 0, new_shelf); // FIXME: ska jag skapa en ny shelf_elem? eller kan jag få det att funka ändå? 
-    merch->stock + add_quant; // FIXME: känns lite olagligt att göra såhär bara?
+    ioopm_list_insert(merch->locs, 0, ptr_elem(new_shelf));
+    ioopm_hash_table_insert(wh->location_ht, string_elem(new_shelf->shelf), ptr_elem(merch));
   }
-  else 
+  else // shelf finns
   {
-    // case 2 shelf finns 
-    // uppdatera i shelf_t och merch_t stock
+    shelf_to_replenish->quant += add_quant;
   }
-
-  // if (!ioopm_hash_table_has_key(wh->location_ht, string_elem(shelf)))
-  // {
-  //   ioopm_hash_table_insert(wh->location_ht, string_elem(shelf), ptr_elem(merch));
-  //   shelf_t *new_shelf = calloc(1, sizeof(shelf_t)); // FIXME: kom ihåg att frigöra pekaren i destroy
-  //   new_shelf->shelf = shelf;
-  //   new_shelf->quant = add_quant;
-  //   ioopm_list_insert(merch->locs, 0, ptr_elem(new_shelf));
-  // }
-  // else 
-  // {
-  //   // shelf_t *shelf = warehouse_find_shelf(merch->locs, merch->locs->shelf);
-  // }
+  merch->stock += add_quant;
 }
