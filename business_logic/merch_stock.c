@@ -230,7 +230,7 @@ void warehouse_show_stock(warehouse_t *wh, char *key)
   {
     link_t *current_link = ioopm_list_iterator_current(it).p;
     shelf_t *current_shelf = current_link->element.p;
-    size_t quant = current_shelf->quant;
+    int quant = current_shelf->quant;
     char *shelf = current_shelf->shelf;
     printf("Shelf: %s. Stock: %d\n", shelf, quant);
     ioopm_list_iterator_advance(it);
@@ -271,7 +271,7 @@ void warehouse_replenish_stock(warehouse_t *wh, char *shelf, merch_t *merch, siz
 
   if (shelf_to_replenish == NULL) // shelf finns inte
   {
-    shelf_t *new_shelf = calloc(1, sizeof(shelf_t)); // FIXME: kom ihåg att frigöra shelfen, kanske redan görs i destroy?
+    shelf_t *new_shelf = calloc(1, sizeof(shelf_t)); 
     new_shelf->shelf = shelf;
     new_shelf->quant = add_quant;
     ioopm_list_insert(merch->locs, 0, ptr_elem(new_shelf));

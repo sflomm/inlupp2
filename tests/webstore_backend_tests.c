@@ -120,8 +120,6 @@ void test_edit_merch() {
   CU_ASSERT_TRUE(merch->price == new_price);
 
   // case 2, new name
-  // TODO: check stock in a later test to see that it is unchanged
-
   warehouse_edit_merch(warehouse, "Bohnanza", "Catan", "New Description", new_price);
   CU_ASSERT_FALSE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
   CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Catan")));
@@ -138,27 +136,66 @@ void test_replenish_stock()
   warehouse_t *warehouse = warehouse_create();
   warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
   merch_t *merch = warehouse_find_merch(warehouse, "Bohnanza");
-  size_t quant = 2;
-  warehouse_replenish_stock(warehouse, "A1", merch, quant);
-  CU_ASSERT_EQUAL(merch->stock, quant);
+  size_t quant_to_add = 2;
 
-  ioopm_list_t *locs = merch->locs;
-  ioopm_list_iterator_t *iter = ioopm_list_iterator_create(locs);
+  // case 1, shelf does not exist
+  warehouse_replenish_stock(warehouse, "A1", merch, quant_to_add);
+  CU_ASSERT_EQUAL(merch->stock, quant_to_add);
+
+  ioopm_list_iterator_t *iter = ioopm_list_iterator_create(merch->locs);
   bool found = false;
 
-  while (!ioopm_list_iterator_at_end(iter) || !found)
+  while (!found && !ioopm_list_iterator_at_end(iter))
   {
-    char *current = ioopm_list_iterator_current(iter).s;
-    if (strcmp(current, "A1") == 0)
+    shelf_t *current_shelf = ioopm_list_iterator_current(iter).p;
+    if (strcmp(current_shelf->shelf, "A1") == 0)
     {
       found = true;
+      CU_ASSERT_TRUE(current_shelf->quant == quant_to_add);
     }
+    ioopm_list_iterator_advance(iter); 
+  }
+
+  CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->location_ht, string_elem("A1")));
+  CU_ASSERT_TRUE(found);
+  ioopm_list_iterator_destroy(iter);
+
+  // case 2, shelf already exists 
+  size_t more_quant = 4; 
+  warehouse_replenish_stock(warehouse, "A1", merch, more_quant);
+  CU_ASSERT_EQUAL(merch->stock, more_quant + quant_to_add);
+
+  ioopm_list_iterator_t *iter2 = ioopm_list_iterator_create(merch->locs);
+  bool found2 = false;
+
+  while (!found2 && !ioopm_list_iterator_at_end(iter2))
+  {
+    shelf_t *current_shelf = ioopm_list_iterator_current(iter2).p;
+    if (strcmp(current_shelf->shelf, "A1") == 0)
+    {
+      found2 = true;
+      CU_ASSERT_TRUE(current_shelf->quant == more_quant + quant_to_add);
+    }
+    ioopm_list_iterator_advance(iter2); 
   }
 
   CU_ASSERT_TRUE(found);
+  ioopm_list_iterator_destroy(iter2);
 
-  ioopm_list_destroy(locs);
-  ioopm_list_iterator_destroy(iter);
+  warehouse_destroy(warehouse);
+}
+
+void test_edit_merch_same_stock()
+{
+  warehouse_t *warehouse = warehouse_create();
+  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  size_t new_price = 1000;
+  warehouse_edit_merch(warehouse, "Bohnanza", "Catan", "New Description", new_price);
+  merch_t *merch = warehouse_find_merch(warehouse, "Catan");
+  size_t add_quant = 10;
+  warehouse_replenish_stock(warehouse, "B8", merch, add_quant); 
+  CU_ASSERT_EQUAL(merch->stock, add_quant);
+
   warehouse_destroy(warehouse);
 }
 
@@ -216,6 +253,7 @@ int main() {
     (CU_add_test(my_test_suite, "find merch", test_find_merch) == NULL) ||
     (CU_add_test(my_test_suite, "edit merch", test_edit_merch) == NULL) ||
     (CU_add_test(my_test_suite, "replenish stock", test_replenish_stock) == NULL) ||
+    (CU_add_test(my_test_suite, "edit merch and replenish stock, check stock property", test_edit_merch_same_stock) == NULL) ||
     0
   )
     {
