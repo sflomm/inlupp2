@@ -23,6 +23,12 @@ void warehouse_destroy(warehouse_t *wh);
 /// @return the desired merch or NULL if not found
 merch_t *warehouse_find_merch(warehouse_t *wh, char *key);
 
+/// @brief find specific shelf
+/// @param list list of shelves (stored in merch->locs)
+/// @param shelf desired shelf
+/// @return the desired shelf or NULL if not found
+shelf_t *warehouse_find_shelf(ioopm_list_t *list, char *shelf);
+
 /// @brief add merch to the hashtable merch_ht
 /// @param wh warehouse struct
 /// @param name merch's name
@@ -62,7 +68,6 @@ void warehouse_show_stock(warehouse_t *wh, char *key);
 /// @param quant quantity to add
 /// @return total amount of stock of specific merch
 void warehouse_replenish_stock(warehouse_t *wh, char *shelf, merch_t *merch, size_t quant);
-
 
 // cart_calc.c FUNCTIONS (7-12)
 
