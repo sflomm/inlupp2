@@ -161,6 +161,18 @@ bool warehouse_remove_merch(warehouse_t *wh, char *key)
   {
     return false;
   }
+
+  ioopm_list_iterator_t* locations_iter = ioopm_list_iterator_create(merch->locs);
+  while(!ioopm_list_iterator_at_end(locations_iter))
+  {
+    elem_t shelf = ioopm_list_iterator_current(locations_iter);
+    ioopm_hash_table_remove(wh->location_ht, shelf);
+
+    ioopm_list_iterator_advance(locations_iter);
+  }
+  ioopm_list_iterator_destroy(locations_iter);
+
+
   warehouse_destroy_one_merch(merch);
   ioopm_hash_table_remove(wh->merch_ht, string_elem(key));
   return true;
