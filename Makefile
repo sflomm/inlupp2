@@ -20,7 +20,7 @@ vpath %.c user_interface
 %_tests: $(OBJECTS) %_tests.c
 	$(CC) $(FLAGS) $^ -lcunit -o $@
 
-program: main.o ui.o $(OBJECTS)
+program: main.o ui.o utils.o $(OBJECTS)
 	$(CC) $(FLAGS) $^ -o $@
 
 run: program

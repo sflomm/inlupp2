@@ -3,8 +3,6 @@
 #include "business_logic/webstore_types.h"
 #include "user_interface/ui.h"
 
-// FIXME: main borde kanske vara i en fil som bara heter main.c
-// så låter man hela den här modulen med ui grejer vara separat?
 int main(void)
 {
     puts("Program körs");

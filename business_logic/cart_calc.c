@@ -103,9 +103,13 @@ bool warehouse_add_to_cart(warehouse_t *wh, size_t cart_id,
                             char *merch, size_t quant)
 {
 //quant cant be less then or equal to zero
-  assert(quant_assert(quant));
+  if (quant <= 0) {
+    return false;
+  }
  //Check if merch exists
-  assert(warehouse_merch_exists(wh, merch));
+  if (!warehouse_merch_exists(wh, merch)) {
+    return false;
+  }
 
   size_t index = 0;
 
@@ -129,7 +133,9 @@ bool warehouse_remove_from_cart(warehouse_t *wh, size_t cart_id,
     shopping_cart_t *cart = warehouse_find_shopping_cart(wh, cart_id, &index);
 
  //Check if merch exists
-   assert(warehouse_merch_exists(wh, merch));
+   if (!warehouse_merch_exists(wh, merch)) {
+    return false;
+   }
 
     // Removing zero items is allowed
     if (quant == 0)
@@ -215,7 +221,7 @@ static void remove_shelf_quant(warehouse_t *wh, elem_t merch, elem_t quantity, s
       ioopm_list_iterator_destroy(lit);
 }
 
-size_t warehouse_checkout(warehouse_t *wh, size_t cart_id)
+bool warehouse_checkout(warehouse_t *wh, size_t cart_id)
 {
   // find cart
   size_t index = 0;
@@ -229,20 +235,24 @@ size_t warehouse_checkout(warehouse_t *wh, size_t cart_id)
     elem_t quantity = ioopm_hash_table_iterator_current_value(it);
     merch_t *merch_type = warehouse_find_merch(wh, key.s);
     
-    if (quantity.si <= merch_type->stock) {
+    // if the quantity of current merch is less then or equal to stock of that merch,
+    // remove from all of its shelves
+    if (0 <= quantity.si && quantity.si <= merch_type->stock) {
     remove_shelf_quant(wh, key, quantity, &remove);
+    //this should always be true, else something went wrong
     if (remove == quantity.si) {
     merch_type->stock -= remove;
     ioopm_hash_table_iterator_advance(it);
     } else {
       ioopm_hash_table_iterator_destroy(it);
-      return 1;
+      return false;
     }
 } else {
       ioopm_hash_table_iterator_destroy(it);
-      return -1;
+      return false;
     }
 }
     warehouse_remove_cart(wh, cart_id, &index);
     ioopm_hash_table_iterator_destroy(it);
+    return true;
 }

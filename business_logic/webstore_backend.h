@@ -111,4 +111,5 @@ size_t warehouse_calculate_cost(warehouse_t *wh, size_t cart_id);
 /// the stock for the merches of the cart is decreased and shopping cart is removed from system
 /// @param wh warehouse
 /// @param cart desired shopping cart
-size_t warehouse_checkout(warehouse_t *wh, size_t cart_id);
+/// @return true if successfully checked out, else false
+bool warehouse_checkout(warehouse_t *wh, size_t cart_id);

@@ -183,7 +183,7 @@ char *ask_question_shelf(char *question) {
 
 char ask_question_menu(char *question) {
     char c = ask_question(question, is_valid_char, convert_char).character;
-    // return toupper(c);
+    // special characters + - =
     if (c == 43 || c == 45 || c == 61)
     {
         return c;
