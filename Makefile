@@ -1,16 +1,11 @@
 CC = gcc
 GPROF_OPTIONS  = -Wall -Wextra -pedantic -g -pg
 FLAGS = -g -Wall -Wextra --coverage
-<<<<<<< HEAD
-OBJECTS = hash_table_iterator.o hash_table.o linked_list.o list_iterator.o merch_stock.o utils.o
+OBJECTS = hash_table_iterator.o hash_table.o linked_list.o list_iterator.o merch_stock.o ui.o
 # add cart_calc.o ^
 # COV = linked_list.gcda list_iterator.gcda hash_table.gcda hash_table_iterator.gcda 
-=======
 PFLAGS = -g -Wall -Wextra -pg
-# add cart_calc.o again
-OBJECTS = hash_table_iterator.o hash_table.o linked_list.o list_iterator.o merch_stock.o cart_calc.o
 COV = webstore_backend.gcda 
->>>>>>> d2bfa222594d618750383dba0b2b74f85daeab48
 
 vpath %.c generic_utils	
 vpath %.c business_logic
