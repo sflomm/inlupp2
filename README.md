@@ -1,7 +1,7 @@
 # Inlupp 2
 ***
 This is a README file for Assignement 2 of the IOOPM-course
-### Run the program
+## Run the program
 *** 
 Use the following terminal command to run the program:
 ```bash
@@ -33,10 +33,10 @@ Use this make command:
 make coverage
 ```
 Should get the following data:
-| FILE          | Lines         |  Exec   | Cover   | Branches| Cover |
-| ------------- | ------------- | ------- | ------- | ------- | ----- |
-| cart_calc.c   | 122           | 105     | 86%     |    48   | 66%   |
-| merch_stock.c | 129           | 121     | 93%     |    34   | 76%   |
+| FILE          | Lines         |  Exec   | Cover   | Branches| Taken | Cover |
+| ------------- | ------------- | ------- | ------- | ------- | ----- |------ |
+| cart_calc.c   | 122           | 105     | 86%     |    48   |  32   |  66%  |
+| merch_stock.c | 129           | 121     | 93%     |    34   |  26   |  76%  |
 
 ## Pointers as keys or values
 ***
