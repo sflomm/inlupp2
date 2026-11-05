@@ -53,12 +53,6 @@ bool warehouse_remove_merch(warehouse_t *wh, char *key);
 /// @return true if successfull edit, false if not 
 bool warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_desc, size_t new_price);
 
-/// @brief list all storage locations for particular merch along with quantities 
-/// stored on each location
-/// @param wh warehouse
-/// @param key merch's key
-void warehouse_show_stock(warehouse_t *wh, char *key);
-
 /// @brief increase stock of a merch by at least one
 /// @note  caller owns shelf
 /// @param wh warehouse 

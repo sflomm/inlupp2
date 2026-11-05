@@ -7,10 +7,10 @@ int main(void)
 {
     // Used AI to create database
     warehouse_t *warehouse = warehouse_create();
-    warehouse_add_merch(warehouse, "Catan", "Epic Board Game", 129);
-    warehouse_replenish_stock(warehouse, "A1", warehouse_find_merch(warehouse, "Catan"), 42);
-    warehouse_replenish_stock(warehouse, "X1", warehouse_find_merch(warehouse, "Catan"), 14);
-    warehouse_replenish_stock(warehouse, "Y1", warehouse_find_merch(warehouse, "Catan"), 30);
+    warehouse_add_merch(warehouse, "Catan", "Epic Board Game", 100);
+    warehouse_replenish_stock(warehouse, "A1", warehouse_find_merch(warehouse, "Catan"), 10);
+    warehouse_replenish_stock(warehouse, "X1", warehouse_find_merch(warehouse, "Catan"), 10);
+    warehouse_replenish_stock(warehouse, "Y1", warehouse_find_merch(warehouse, "Catan"), 10);
 
     warehouse_add_merch(warehouse, "Codenames", "Epic Board Game", 50);
 

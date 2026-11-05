@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <assert.h>
 
 static bool string_eq(elem_t a, elem_t b)
 {
@@ -60,7 +59,7 @@ shopping_cart_t *warehouse_find_shopping_cart(warehouse_t *wh, size_t cart_id, s
         elem_t value = ioopm_list_iterator_current(it);
         shopping_cart_t *value_cart = value.p;
         if (value_cart->id == cart_id) {
-          if (counter != NULL) {
+          if (counter != 0) {
             *index = counter;
           }
         ioopm_list_iterator_destroy(it);
@@ -91,13 +90,13 @@ static bool warehouse_merch_exists(warehouse_t *wh, char *merch) {
 }
 }
 
-
-static bool quant_assert(size_t quant) {
-  if (quant == 0) {
-    return false;
-  }
-  return true;
-}
+// STÄDA: används aldrig så jag kommenterade bort den
+// static bool quant_assert(size_t quant) {
+//   if (quant == 0) {
+//     return false;
+//   }
+//   return true;
+// }
 
 // FIXME: kan lägga in obegränsat med merch
 bool warehouse_add_to_cart(warehouse_t *wh, size_t cart_id,
@@ -130,7 +129,7 @@ bool warehouse_remove_from_cart(warehouse_t *wh, size_t cart_id,
                                 char *merch, size_t quant)
 {
   size_t index = 0;
-    shopping_cart_t *cart = warehouse_find_shopping_cart(wh, cart_id, &index);
+  shopping_cart_t *cart = warehouse_find_shopping_cart(wh, cart_id, &index);
 
  //Check if merch exists
    if (!warehouse_merch_exists(wh, merch)) {
@@ -142,9 +141,7 @@ bool warehouse_remove_from_cart(warehouse_t *wh, size_t cart_id,
     {
         return true;
     }
-    if (quant < 0) {
-      return false;
-    }
+  
     // Find the current quantity of this merchandise in the cart
     elem_t result;
 
@@ -237,7 +234,8 @@ bool warehouse_checkout(warehouse_t *wh, size_t cart_id)
     
     // if the quantity of current merch is less then or equal to stock of that merch,
     // remove from all of its shelves
-    if (0 <= quantity.si && quantity.si <= merch_type->stock) {
+    if (quantity.si <= merch_type->stock) { // STÄDA: gamla koden var (0 <= quantity.si && quantity.si <= merch_type->stock)
+                                            // jag tog bort första villkoret då size_t alltid är positivt. testerna funkar
     remove_shelf_quant(wh, key, quantity, &remove);
     //this should always be true, else something went wrong
     if (remove == quantity.si) {

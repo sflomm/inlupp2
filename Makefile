@@ -44,13 +44,16 @@ $(COV_DIR)/%.o: %.c | $(COV_DIR)
 $(COV_DIR)/webstore_backend_tests: $(COV_OBJECTS) webstore_backend_tests.c
 	$(CC) $(COV_FLAGS) $^ -lcunit -o $@
 
+GCOVR_FLAGS = -r . --object-directory $(COV_DIR) \
+              --filter '.*merch_stock\.c' --filter '.*cart_calc\.c'
+
 coverage: $(COV_DIR)/webstore_backend_tests
-	rm -f $(COV_DIR)/*.gcda $(COV_DIR)/*.gcov
+	rm -f $(COV_DIR)/*.gcda
 	./$(COV_DIR)/webstore_backend_tests
-	cd $(COV_DIR) && gcov -b $(notdir $(COV_OBJECTS:.o=.gcda)) | true
-	gcovr -r . --object-directory $(COV_DIR) \
-	      --filter '.*merch_stock\.c' --filter '.*cart_calc\.c' \
-	      --txt-metric branch
+	@echo "=== Line coverage ==="
+	gcovr $(GCOVR_FLAGS)
+	@echo "=== Branch coverage ==="
+	gcovr $(GCOVR_FLAGS) --txt-metric branch
 
 # gprof: clean
 # 	$(CC) $(GPROF_OPTIONS) generic_utils/freq_count.c generic_utils/hash_table.c generic_utils/hash_table_iterator.c -o freq_new

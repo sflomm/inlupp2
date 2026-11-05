@@ -18,7 +18,7 @@ static int compare_names(const void *a, const void *b)
   return strcmp(name_a, name_b);
 }
 
-void warehouse_list_merch(warehouse_t *wh)
+static void warehouse_list_merch(warehouse_t *wh)
 {
   ioopm_hash_table_t *merch_ht = wh->merch_ht;
   size_t total_amount_of_merch = merch_ht->size;
@@ -73,7 +73,9 @@ static int compare_shelves(const void *a, const void *b)
   return strcmp(shelf_a->shelf, shelf_b->shelf);
 }
 
-void warehouse_show_stock(warehouse_t *wh, char *key)
+/// list all storage locations for particular merch along with the quantities stored on each location
+/// prints 20 merch at a time
+static void warehouse_show_stock(warehouse_t *wh, char *key)
 {
   merch_t *merch = warehouse_find_merch(wh, key);
 
@@ -255,7 +257,6 @@ static void calculate_cost(warehouse_t *warehouse) {
     printf("Total cost of cart is: %d\n", cost); 
 }
 
-//FIXME: checkout failed
 static void checkout(warehouse_t *warehouse) {
     int cart_id;
     cart_helper(warehouse, &cart_id);

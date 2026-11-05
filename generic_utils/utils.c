@@ -56,7 +56,7 @@ bool is_number(char *str) {
      return false;
      }
 
-    for (int i = 0; i < strlen(str); i++) {
+    for (size_t i = 0; i < strlen(str); i++) {
         
          //check if first char is null char or if its - then null char
         if (str[0] == '-' && str[1] == '\0') {
@@ -76,44 +76,6 @@ bool is_number(char *str) {
         return true;
 
     }
-
-// bool is_float(char *str) {
-
-//         bool seen_dot = false;  
-//         int i = 0;
-
-//              //check if first char is null char or if its - then null char
-//         if (str[0] == '\0' || str[0] == '-' && str[1] == '\0') {
-//             return false;
-//         } // edge case for .
-//         if (str[0] == '.' && str[1] == '\0') {
-//             return false;
-//         }
-        
-//         //if first is - let next 
-//         if (str[0] == '-') {
-//             i = 1;
-//         }
-
-// while (i < strlen(str)) {
-
-//     if (isdigit(str[i])) {
-//         i++;
-//     }
-//     else if (str[i] == '.') {
-//         if (seen_dot == true) {
-//             return false;
-//         } else {
-//             seen_dot = true;
-//             i++;
-//         }
-
-//     } else if (!isdigit(str[i]) && str[i] != '.') {
-//         return false;
-//     }
-// }
-//     return true;
-// }
 
 void clear_input_buffer(void) {
 
@@ -147,7 +109,7 @@ int read_string(char *buf, int buf_siz) {
 }
 
 bool is_valid_id(char *id) {
-    int i = 0;
+    size_t i = 0;
     if (isdigit(id[0]) || id[0] == '\0' || id[0] == '-' || id[0] == '.' || isspace(id[0])) {
     return false;
     }
@@ -165,20 +127,34 @@ bool is_valid_id(char *id) {
 return true;
 }
 
+static answer_t convert_int(char *str)
+{
+  answer_t result;
+  result.int_value = atoi(str); 
+  return result;
+}
 
 int ask_question_int(char *question)
 {
-  answer_t answer = ask_question(question, is_number, (convert_func *) atoi);
-  return answer.int_value; // svaret som ett heltal
+  answer_t answer = ask_question(question, is_number, convert_int);
+  return answer.int_value; 
+}
+
+static answer_t convert_string(char *str)
+{
+  answer_t result;
+  result.string_value = strdup(str);
+  return result;
 }
 
 char *ask_question_string(char *question)
 {
-  return ask_question(question, not_empty, (convert_func *) strdup).string_value;
+  return ask_question(question, not_empty, convert_string).string_value;
 }
 
-char *ask_question_shelf(char *question) {
-    return ask_question(question, is_valid_id, (convert_func *) strdup).string_value;
+char *ask_question_shelf(char *question)
+{
+  return ask_question(question, is_valid_id, convert_string).string_value;
 }
 
 char ask_question_menu(char *question) {
@@ -202,6 +178,3 @@ answer_t ask_question(char *question, check_func *check, convert_func *convert) 
             puts("Invalid choice\n");
         }
 }
-
-
-
