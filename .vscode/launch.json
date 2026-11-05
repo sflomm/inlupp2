@@ -8,7 +8,7 @@
         "name": "(gdb) Launch",
         "type": "cppdbg",
         "request": "launch",
-         "program": "${workspaceFolder}/webstore_backend_tests",
+         "program": "${workspaceFolder}/program",
         "args": [],
         "stopAtEntry": false,
         "cwd": "${fileDirname}",

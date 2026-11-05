@@ -1,0 +1,25 @@
+
+name: C Tests
+
+on:
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y libcunit1-dev
+
+      - name: Run tests
+        run: make test
+
+      # TODO: Add the command that builds and runs your tests

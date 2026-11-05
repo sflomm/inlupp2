@@ -1,11 +1,10 @@
 CC = gcc
 GPROF_OPTIONS  = -Wall -Wextra -pedantic -g -pg
-FLAGS = -g -Wall -Wextra --coverage
-OBJECTS = hash_table_iterator.o hash_table.o linked_list.o list_iterator.o merch_stock.o ui.o
-# add cart_calc.o ^
-# COV = linked_list.gcda list_iterator.gcda hash_table.gcda hash_table_iterator.gcda 
+FLAGS = -g -Wall -Wextra
 PFLAGS = -g -Wall -Wextra -pg
-COV = webstore_backend.gcda 
+# add cart_calc.o again
+OBJECTS = hash_table_iterator.o hash_table.o linked_list.o list_iterator.o merch_stock.o cart_calc.o
+COV = --coverage
 
 vpath %.c generic_utils	
 vpath %.c business_logic
@@ -21,7 +20,7 @@ vpath %.c user_interface
 %_tests: $(OBJECTS) %_tests.c
 	$(CC) $(FLAGS) $^ -lcunit -o $@
 
-program: main.o ui.o $(OBJECTS)
+program: main.o ui.o utils.o $(OBJECTS)
 	$(CC) $(FLAGS) $^ -o $@
 
 run: program
@@ -48,6 +47,8 @@ coverage: webstore_backend_tests
 
 clean:
 	rm -f *.o webstore_backend_tests
-	rm -f *.gcda *.gcno *.gcov gmon.out
+	rm -f *.gcda
+	rm -f *.gcno
+	rm -f *.c.gcov
 
 .PHONY: test valgrind coverage clean program

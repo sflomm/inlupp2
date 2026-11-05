@@ -59,6 +59,98 @@ void warehouse_show_stock(warehouse_t *wh, char *key)
   ioopm_list_iterator_destroy(it);
 }
 
+static void replenish_merch(warehouse_t *warehouse) {
+    char *merch_p_input = ask_question_string("Merch to replenish: ");
+    merch_t *merch_p = warehouse_find_merch(warehouse, merch_p_input);
+    if (merch_p == NULL)
+    {
+        printf("Merch %s not found, try again\n", merch_p_input);   
+        replenish_merch(warehouse);
+}
+        char *shelf_p = ask_question_string("Store on shelf: ");
+        int quantity = ask_question_int("Quantity to add: ");
+        warehouse_replenish_stock(warehouse, shelf_p, merch_p, quantity);
+}
+
+static void create_cart(warehouse_t *warehouse) {
+        shopping_cart_t *cart = warehouse_create_cart(warehouse);
+        int id = (int)cart->id;
+    printf("Created shopping cart with id: %d\n", id);
+}
+
+static void cart_helper(warehouse_t *warehouse, int *cart_id) {
+    bool cart_exists = false;
+    while (!cart_exists) {
+    *cart_id = ask_question_int("Specify your cart_id: ");
+    size_t index = 0;
+        if (warehouse_find_shopping_cart(warehouse, (size_t)*cart_id, &index) == NULL) {
+            puts("Invalid cart, try again");
+    } else {
+        cart_exists = true;
+    }
+    }
+
+}
+
+static void remove_cart(warehouse_t *warehouse) {
+    int cart_id;
+    cart_helper(warehouse, &cart_id);
+    size_t size_to_cart = (size_t)cart_id;
+    size_t index = 0;
+    warehouse_remove_cart(warehouse, size_to_cart, &index);
+        printf("Shopping cart with id: %d, was removed", cart_id);
+}
+
+
+static void add_to_cart(warehouse_t *warehouse) {
+    //check if cart is valid
+    int cart_id;
+    cart_helper(warehouse, &cart_id);
+    char *merch = ask_question_string("Merch to be added to cart: ");
+    int quant = ask_question_int("Quantity: ");
+    size_t size_to_quant = (size_t)quant;
+        while (!warehouse_add_to_cart(warehouse, cart_id, merch, quant)) {
+            puts("Invalid quant or merch, try again");
+                merch = ask_question_string("Merch to be added to cart: ");
+                quant = ask_question_int("Quantity: ");
+        }
+    printf("%d of %s was added to the shopping cart\n", quant, merch);
+}
+
+static void remove_from_cart(warehouse_t *warehouse) {
+    //check if cart is valid
+    int cart_id;
+     cart_helper(warehouse, &cart_id);
+    char *merch = ask_question_string("what merch do you want to remove: ");
+    int quant = ask_question_int("Quantity: ");
+        while (!warehouse_remove_from_cart(warehouse, (size_t)cart_id, merch, (size_t)quant)) {
+            puts("Invalid quant or merch, try again");
+                merch = ask_question_string("what merch do you want to remove: ");
+                quant = ask_question_int("Quantity: ");
+        }
+    printf("%d of %s was removed from the shopping cart\n", quant, merch);
+}
+
+static void calculate_cost(warehouse_t *warehouse) {
+    int cart_id;
+    cart_helper(warehouse, &cart_id);
+    size_t size_to_cart = (size_t)cart_id;
+    int cost = (int)warehouse_calculate_cost(warehouse, size_to_cart);
+    printf("Total cost of cart is: %d\n", cost); 
+}
+
+//FIXME: checkout failed
+static void checkout(warehouse_t *warehouse) {
+    int cart_id;
+    cart_helper(warehouse, &cart_id);
+    if (!warehouse_checkout(warehouse, (size_t)cart_id)) {
+        puts("Checkout failed");
+        return;
+    } else {
+        puts("Successfully checked out");
+    }
+}
+
 void event_loop(warehouse_t *warehouse)
 {
     char *menu = "[A] Add Merchandise\n"
@@ -143,7 +235,7 @@ void event_loop(warehouse_t *warehouse)
             if (strcmp(choice_e, "Y") == 0 || strcmp(choice_e, "y") == 0) warehouse_edit_merch(warehouse, merch_e, new_name, new_description, new_price);
             break;
 
-        case 'S': // FIXME: funkar inte :(
+        case 'S': // FIXME: funkar inte :( SEGFAULT
             puts("Show Stock of Merch");
             char *merch_s = ask_question_string("Choose Merch: ");
             if (warehouse_find_merch(warehouse, merch_s) == NULL)
@@ -154,48 +246,32 @@ void event_loop(warehouse_t *warehouse)
             warehouse_show_stock(warehouse, merch_s);
             break;
 
-        case 'P': // FIXME: testa denna är show stock funkar
-            puts("Replenish Merchandise");
-            char *merch_p_input = ask_question_string("Merch to replenish: ");
-            merch_t *merch_p = warehouse_find_merch(warehouse, merch_p_input);
-            if (merch_p == NULL)
-            {
-                printf("Merch %s not found, try again\n", merch_p_input);
-                break;
-            }
-            char *shelf_p = ask_question_string("Store on shelf: ");
-            int quantity = ask_question_int("Quantity to add: ");
-            warehouse_replenish_stock(warehouse, shelf_p, merch_p, quantity);
+        case 'P': // FIXME: testa denna när show stock funkar
+        replenish_merch(warehouse);
             break;
 
         case 'C':
-            puts("Create Shopping Cart");
-        //     warehouse_create_cart(warehouse);
+        create_cart(warehouse);
             break;
 
         case 'R':
-            puts("Remove Shopping Cart");
-        //     warehouse_remove_cart(warehouse, key);
+        remove_cart(warehouse);
             break;
         
         case '+':
-            puts("Add to Shopping Cart");
-        //     warehouse_add_to_cart(warehouse->carts, cart, merch, quantity);
+        add_to_cart(warehouse);
             break;
         
         case '-':
-            puts("Remove From Shopping Cart");
-        //     warehouse_remove_from_cart(warehouse, cart, merch, quantity);
+            remove_from_cart(warehouse);
             break;
         
         case '=':
-            puts("Calculate Cost");
-        //     warehouse_calculate_cost(warehouse->carts, cart);
+        calculate_cost(warehouse);
             break;
         
         case 'O':
-            puts("Checkout Shopping Cart");
-        //     warehouse_checkout(warehouse, cart);
+            checkout(warehouse);
             break;
 
         case 'Q':

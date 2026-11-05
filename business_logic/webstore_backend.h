@@ -30,6 +30,7 @@ merch_t *warehouse_find_merch(warehouse_t *wh, char *key);
 shelf_t *warehouse_find_shelf(ioopm_list_t *list, char *shelf);
 
 /// @brief add merch to the hashtable merch_ht
+/// @note  caller owns name and desc 
 /// @param wh warehouse struct
 /// @param name merch's name
 /// @param desc merch's description
@@ -47,13 +48,14 @@ void warehouse_list_merch(warehouse_t *wh);
 bool warehouse_remove_merch(warehouse_t *wh, char *key);
 
 /// @brief edit merch's name, description or/and price.
-/// NOTE. stock is not affected and changing name to existing key is not allowed.
+/// @note  stock is not affected. Caller owns key, new_name and new_desc.
 /// @param wh warehouse
 /// @param key merch to be edited
 /// @param new_name merch's new name
 /// @param new_desc merch's new description
 /// @param new_price merch's new price
-void warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_desc, size_t new_price);
+/// @return true if successfull edit, false if not 
+bool warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_desc, size_t new_price);
 
 /// @brief list all storage locations for particular merch along with quantities 
 /// stored on each location
@@ -62,6 +64,7 @@ void warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_
 void warehouse_show_stock(warehouse_t *wh, char *key);
 
 /// @brief increase stock of a merch by at least one
+/// @note  caller owns shelf
 /// @param wh warehouse 
 /// @param shelf desired shelf
 /// @param merch desired merch to increase
@@ -76,10 +79,16 @@ void warehouse_replenish_stock(warehouse_t *wh, char *shelf, merch_t *merch, siz
 /// @return a hashtable where key is merch's name and value it's quantity
 shopping_cart_t *warehouse_create_cart(warehouse_t *wh);
 
+/// @brief Finds the shopping cart by traversing the shopping carts in the warehouse
+/// @param wh The warehouse that holds shopping carts
+/// @param cart_id shopping carts identifier
+/// @return a shopping cart or NULL if not found
+shopping_cart_t *warehouse_find_shopping_cart(warehouse_t *wh, size_t cart_id, size_t *index);
+
 /// @brief removes a shopping cart from the system
 /// @param wh warehouse
 /// @param key shopping cart to be removed
-void warehouse_remove_cart(warehouse_t *wh, size_t cart_id);
+void warehouse_remove_cart(warehouse_t *wh, size_t cart_id, size_t *index);
 
 /// @brief add some quantity of merch to specific shopping cart
 /// @param cart_ht hashtable where all shopping carts are stored
@@ -98,7 +107,6 @@ bool warehouse_remove_from_cart(warehouse_t *wh, size_t cart_id, char *merch, si
 /// @brief calculate cost of a shopping cart 
 /// @param cart_ht hash_table where all shopping carts are stored
 /// @param cart desired shopping cart
-// FIXME: is size_t always an integer?
 /// @return the cost (positive integer) of all merch in the shopping cart
 size_t warehouse_calculate_cost(warehouse_t *wh, size_t cart_id);
 
@@ -106,4 +114,5 @@ size_t warehouse_calculate_cost(warehouse_t *wh, size_t cart_id);
 /// the stock for the merches of the cart is decreased and shopping cart is removed from system
 /// @param wh warehouse
 /// @param cart desired shopping cart
-size_t warehouse_checkout(warehouse_t *wh, size_t cart_id);
+/// @return true if successfully checked out, else false
+bool warehouse_checkout(warehouse_t *wh, size_t cart_id);
