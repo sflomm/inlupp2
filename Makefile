@@ -2,7 +2,6 @@ CC = gcc
 GPROF_OPTIONS  = -Wall -Wextra -pedantic -g -pg
 FLAGS = -g -Wall -Wextra
 PFLAGS = -g -Wall -Wextra -pg
-# add cart_calc.o again
 OBJECTS = hash_table_iterator.o hash_table.o linked_list.o list_iterator.o merch_stock.o cart_calc.o
 COV = --coverage
 
@@ -10,9 +9,6 @@ vpath %.c generic_utils
 vpath %.c business_logic
 vpath %.c tests
 vpath %.c user_interface
-
-# all: webstore_backend_tests
-# 	./webstore_backend_tests
 
 %.o: %.c
 	$(CC) $(FLAGS) $< -c
@@ -32,13 +28,29 @@ test: webstore_backend_tests
 valgrind: webstore_backend_tests
 	valgrind --leak-check=full ./webstore_backend_tests
 
-COV_TARGET = merch_stock
+# AI created coverage stuff
+COV_DIR     = cov
+COV_FLAGS   = $(FLAGS) --coverage -O0
+COV_OBJECTS = $(addprefix $(COV_DIR)/, $(OBJECTS))
+COV_SRCS    = merch_stock.c cart_calc.c
 
-coverage: webstore_backend_tests
-	rm -f *.gcda *.gcov
-	./webstore_backend_tests
-	gcov -b $(COV_TARGET).o
-	gcovr -r . --filter '.*$(COV_TARGET)\.c' --txt-metric branch
+$(COV_DIR):
+	mkdir -p $(COV_DIR)
+
+# Instrumented objects: same sources, same vpath, but with --coverage
+$(COV_DIR)/%.o: %.c | $(COV_DIR)
+	$(CC) $(COV_FLAGS) -c $< -o $@
+
+$(COV_DIR)/webstore_backend_tests: $(COV_OBJECTS) webstore_backend_tests.c
+	$(CC) $(COV_FLAGS) $^ -lcunit -o $@
+
+coverage: $(COV_DIR)/webstore_backend_tests
+	rm -f $(COV_DIR)/*.gcda $(COV_DIR)/*.gcov
+	./$(COV_DIR)/webstore_backend_tests
+	cd $(COV_DIR) && gcov -b $(notdir $(COV_OBJECTS:.o=.gcda)) | true
+	gcovr -r . --object-directory $(COV_DIR) \
+	      --filter '.*merch_stock\.c' --filter '.*cart_calc\.c' \
+	      --txt-metric branch
 
 # gprof: clean
 # 	$(CC) $(GPROF_OPTIONS) generic_utils/freq_count.c generic_utils/hash_table.c generic_utils/hash_table_iterator.c -o freq_new
@@ -47,8 +59,7 @@ coverage: webstore_backend_tests
 
 clean:
 	rm -f *.o webstore_backend_tests
-	rm -f *.gcda
-	rm -f *.gcno
-	rm -f *.c.gcov
+	rm -f *.gcda *.gcno *.c.gcov
+	rm -rf $(COV_DIR)
 
 .PHONY: test valgrind coverage clean program
