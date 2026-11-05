@@ -11,9 +11,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <assert.h>
-
-#define PAGE_SIZE 20
 
 // // String keys
 size_t string_knr_hash(elem_t key)
@@ -33,7 +30,7 @@ bool simple_knr_eq(elem_t key1, elem_t key2)
   return (strcmp(key1.s, key2.s) == 0);
 }
 
-warehouse_t *warehouse_create()
+warehouse_t *warehouse_create(void)
 {
     //merch table
     ioopm_hash_table_t *merch_ht = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
@@ -94,6 +91,7 @@ static void warehouse_destroy_all_merch(warehouse_t *wh) {
   ioopm_hash_table_iterator_destroy(it);
 }
 
+// free allocated memory for only one merch struct
 static void warehouse_destroy_one_merch(merch_t *merch)
 {
   if (merch == NULL)

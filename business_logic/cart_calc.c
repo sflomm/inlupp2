@@ -72,7 +72,6 @@ shopping_cart_t *warehouse_find_shopping_cart(warehouse_t *wh, size_t cart_id, s
       return NULL;
 }
 
-
 void warehouse_remove_cart(warehouse_t *wh, size_t cart_id, size_t *index)
 {
   shopping_cart_t *cart = warehouse_find_shopping_cart(wh, cart_id, index);
@@ -98,7 +97,7 @@ static bool warehouse_merch_exists(warehouse_t *wh, char *merch) {
 //   return true;
 // }
 
-// FIXME: kan lägga in obegränsat med merch
+// FIXME: kan lägga in obegränsat med merch, HAR INTE UPPDATERATS ÄN? så skumt
 bool warehouse_add_to_cart(warehouse_t *wh, size_t cart_id,
                             char *merch, size_t quant)
 {
@@ -123,7 +122,6 @@ bool warehouse_add_to_cart(warehouse_t *wh, size_t cart_id,
        return true;
   }
 }
-
 
 bool warehouse_remove_from_cart(warehouse_t *wh, size_t cart_id,
                                 char *merch, size_t quant)
@@ -173,7 +171,6 @@ bool warehouse_remove_from_cart(warehouse_t *wh, size_t cart_id,
 
     return true;
 }
-
 
 size_t warehouse_calculate_cost(warehouse_t *wh, size_t cart_id)
 {

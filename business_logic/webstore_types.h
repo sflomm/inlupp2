@@ -2,6 +2,7 @@
 #include "../generic_types/common.h"
 #include "../generic_types/linked_list.h"
 #include "../generic_types/hash_table.h"
+
 typedef struct merch merch_t;
 typedef struct shelf shelf_t;
 typedef struct warehouse warehouse_t;

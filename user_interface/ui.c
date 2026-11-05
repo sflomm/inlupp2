@@ -11,6 +11,7 @@
 #include "../generic_types/list_iterator.h"
 #include "../generic_types/utils.h"
 
+// help function for alphabetical order 
 static int compare_names(const void *a, const void *b)
 {
   const char *name_a = *(char * const *)a;
@@ -18,6 +19,8 @@ static int compare_names(const void *a, const void *b)
   return strcmp(name_a, name_b);
 }
 
+// lists all merch at the warehouse, prints 20 merch at a time
+// user input is needed to continue printing 20 more
 static void warehouse_list_merch(warehouse_t *wh)
 {
   ioopm_hash_table_t *merch_ht = wh->merch_ht;
@@ -66,6 +69,7 @@ static void warehouse_list_merch(warehouse_t *wh)
   puts("");
 }
 
+// help function for alphabetical order 
 static int compare_shelves(const void *a, const void *b)
 {
   const shelf_t *shelf_a = *(shelf_t * const *)a;
@@ -73,8 +77,7 @@ static int compare_shelves(const void *a, const void *b)
   return strcmp(shelf_a->shelf, shelf_b->shelf);
 }
 
-/// list all storage locations for particular merch along with the quantities stored on each location
-/// prints 20 merch at a time
+/// list all storage locations for a particular merch along with the quantities stored on each location
 static void warehouse_show_stock(warehouse_t *wh, char *key)
 {
   merch_t *merch = warehouse_find_merch(wh, key);
@@ -115,6 +118,8 @@ static void warehouse_show_stock(warehouse_t *wh, char *key)
   puts("");
   free(shelves);
 }
+
+// FUNCTIONS for event loop actions 
 
 static void add_merch(warehouse_t *warehouse)
 {
@@ -349,5 +354,4 @@ void event_loop(warehouse_t *warehouse)
         }
         
     } while (answer != 'Q');
-    
 }
