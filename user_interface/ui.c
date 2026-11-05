@@ -224,12 +224,12 @@ static void add_to_cart(warehouse_t *warehouse) {
     cart_helper(warehouse, &cart_id);
     char *merch = ask_question_string("Merch to be added to cart: ");
     int quant = ask_question_int("Quantity: ");
-    size_t size_to_quant = (size_t)quant;
-        while (!warehouse_add_to_cart(warehouse, cart_id, merch, quant)) {
-            puts("Invalid quant or merch, try again");
-                merch = ask_question_string("Merch to be added to cart: ");
-                quant = ask_question_int("Quantity: ");
-        }
+
+    while (!warehouse_add_to_cart(warehouse, cart_id, merch, (size_t)quant)) {
+        puts("Invalid quant or merch, try again");
+            merch = ask_question_string("Merch to be added to cart: ");
+            quant = ask_question_int("Quantity: ");
+    }
     printf("%d of %s was added to the shopping cart\n", quant, merch);
 }
 
