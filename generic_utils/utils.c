@@ -199,7 +199,7 @@ answer_t ask_question(char *question, check_func *check, convert_func *convert) 
         if (check(buf)) {
             return convert(buf);
         }
-            printf("Invalid choice\n");
+            puts("Invalid choice\n");
         }
 }
 

@@ -37,10 +37,6 @@ shelf_t *warehouse_find_shelf(ioopm_list_t *list, char *shelf);
 /// @param price merch's price
 void warehouse_add_merch(warehouse_t *wh, char *name, char *desc, size_t price);
 
-/// @brief lists all current merch 20 at a time
-/// @param merch_ht hashtable that holds all merch
-void warehouse_list_merch(warehouse_t *wh);
-
 /// @brief remove merch from warehouse and it's stock
 /// @param wh warehouse
 /// @param key key to remove

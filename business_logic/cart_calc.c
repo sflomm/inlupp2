@@ -99,6 +99,7 @@ static bool quant_assert(size_t quant) {
   return true;
 }
 
+// FIXME: kan lägga in obegränsat med merch
 bool warehouse_add_to_cart(warehouse_t *wh, size_t cart_id,
                             char *merch, size_t quant)
 {
@@ -121,9 +122,8 @@ bool warehouse_add_to_cart(warehouse_t *wh, size_t cart_id,
   } else {   //cart exists, insert (hash_table will just replace it if already exits)
        ioopm_hash_table_insert(cart->items, string_elem(merch), size_elem(quant));
        return true;
+  }
 }
-}
-
 
 
 bool warehouse_remove_from_cart(warehouse_t *wh, size_t cart_id,

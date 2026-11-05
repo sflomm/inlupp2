@@ -184,7 +184,6 @@ bool warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_
   merch_t *merch = warehouse_find_merch(wh, key);
   if (merch == NULL)
   {
-    // puts("Merch not found.\n");
     return false;
   }
 
@@ -197,8 +196,8 @@ bool warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_
   }
 
   //if edit would clash with already existing merch name
-  elem_t _;
-  if (ioopm_hash_table_lookup(wh->merch_ht, string_elem(new_name), &_))
+  elem_t value; 
+  if (ioopm_hash_table_lookup(wh->merch_ht, string_elem(new_name), &value))
   {
     //returns false if new_name already in merch_ht
     return false;
@@ -243,7 +242,7 @@ void warehouse_replenish_stock(warehouse_t *wh, char *shelf, merch_t *merch, siz
 {
   shelf_t *shelf_to_replenish = warehouse_find_shelf(merch->locs, shelf);
 
-  if (shelf_to_replenish == NULL) // shelf finns inte
+  if (shelf_to_replenish == NULL) // shelf does not exist
   {
     shelf_t *new_shelf = calloc(1, sizeof(shelf_t)); 
     new_shelf->shelf = shelf;
@@ -251,7 +250,7 @@ void warehouse_replenish_stock(warehouse_t *wh, char *shelf, merch_t *merch, siz
     ioopm_list_insert(merch->locs, 0, ptr_elem(new_shelf));
     ioopm_hash_table_insert(wh->location_ht, string_elem(new_shelf->shelf), ptr_elem(merch));
   }
-  else // shelf finns
+  else // shelf exists 
   {
     shelf_to_replenish->quant += add_quant;
   }
