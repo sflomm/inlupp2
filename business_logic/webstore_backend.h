@@ -30,6 +30,7 @@ merch_t *warehouse_find_merch(warehouse_t *wh, char *key);
 shelf_t *warehouse_find_shelf(ioopm_list_t *list, char *shelf);
 
 /// @brief add merch to the hashtable merch_ht
+/// @note  caller owns name and desc 
 /// @param wh warehouse struct
 /// @param name merch's name
 /// @param desc merch's description
@@ -47,13 +48,14 @@ void warehouse_list_merch(warehouse_t *wh);
 bool warehouse_remove_merch(warehouse_t *wh, char *key);
 
 /// @brief edit merch's name, description or/and price.
-/// NOTE. stock is not affected and changing name to existing key is not allowed.
+/// @note  stock is not affected. Caller owns key, new_name and new_desc.
 /// @param wh warehouse
 /// @param key merch to be edited
 /// @param new_name merch's new name
 /// @param new_desc merch's new description
 /// @param new_price merch's new price
-void warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_desc, size_t new_price);
+/// @return true if successfull edit, false if not 
+bool warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_desc, size_t new_price);
 
 /// @brief list all storage locations for particular merch along with quantities 
 /// stored on each location
@@ -62,6 +64,7 @@ void warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_
 void warehouse_show_stock(warehouse_t *wh, char *key);
 
 /// @brief increase stock of a merch by at least one
+/// @note  caller owns shelf
 /// @param wh warehouse 
 /// @param shelf desired shelf
 /// @param merch desired merch to increase

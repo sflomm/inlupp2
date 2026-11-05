@@ -161,33 +161,56 @@ bool warehouse_remove_merch(warehouse_t *wh, char *key)
   {
     return false;
   }
+
+  ioopm_list_iterator_t* locations_iter = ioopm_list_iterator_create(merch->locs);
+  while(!ioopm_list_iterator_at_end(locations_iter))
+  {
+    elem_t shelf = ioopm_list_iterator_current(locations_iter);
+    ioopm_hash_table_remove(wh->location_ht, shelf);
+
+    ioopm_list_iterator_advance(locations_iter);
+  }
+  ioopm_list_iterator_destroy(locations_iter);
+
+
   warehouse_destroy_one_merch(merch);
   ioopm_hash_table_remove(wh->merch_ht, string_elem(key));
   return true;
 }
 
-void warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_desc, size_t new_price)
+bool warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_desc, size_t new_price)
 {
   
   merch_t *merch = warehouse_find_merch(wh, key);
   if (merch == NULL)
   {
     // puts("Merch not found.\n");
-    return;
+    return false;
   }
 
-  if (strcmp(key, new_name) != 0)
+  //if editing only desc and price
+  if (strcmp(key, new_name) == 0)
+  {
+    merch->desc = new_desc;
+    merch->price = new_price;
+    return true;
+  }
+
+  //if edit would clash with already existing merch name
+  elem_t _;
+  if (ioopm_hash_table_lookup(wh->merch_ht, string_elem(new_name), &_))
+  {
+    //returns false if new_name already in merch_ht
+    return false;
+  }
+  else
   {
     merch_t *new_merch = ioopm_hash_table_remove(wh->merch_ht, string_elem(key)).p;
     new_merch->name = new_name;
     new_merch->desc = new_desc;
     new_merch->price = new_price;
     ioopm_hash_table_insert(wh->merch_ht, string_elem(new_name), ptr_elem(new_merch));
-  }
-  else
-  {
-    merch->desc = new_desc;
-    merch->price = new_price;
+    return true;
   }
 }
 
