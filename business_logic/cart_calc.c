@@ -89,24 +89,21 @@ static bool warehouse_merch_exists(warehouse_t *wh, char *merch) {
 }
 }
 
-// STÄDA: används aldrig så jag kommenterade bort den
-// static bool quant_assert(size_t quant) {
-//   if (quant == 0) {
-//     return false;
-//   }
-//   return true;
-// }
-
-// FIXME: kan lägga in obegränsat med merch, HAR INTE UPPDATERATS ÄN? så skumt
 bool warehouse_add_to_cart(warehouse_t *wh, size_t cart_id,
                             char *merch, size_t quant)
 {
-//quant cant be less then or equal to zero
-  if (quant <= 0) {
+//quant cant be zero
+  if (quant == 0) {
     return false;
   }
  //Check if merch exists
   if (!warehouse_merch_exists(wh, merch)) {
+    return false;
+  }
+
+  merch_t *find_merch = warehouse_find_merch(wh, merch);
+  if (find_merch->stock < quant)
+  {
     return false;
   }
 
@@ -231,8 +228,7 @@ bool warehouse_checkout(warehouse_t *wh, size_t cart_id)
     
     // if the quantity of current merch is less then or equal to stock of that merch,
     // remove from all of its shelves
-    if (quantity.si <= merch_type->stock) { // STÄDA: gamla koden var (0 <= quantity.si && quantity.si <= merch_type->stock)
-                                            // jag tog bort första villkoret då size_t alltid är positivt. testerna funkar
+    if (quantity.si <= merch_type->stock) { 
     remove_shelf_quant(wh, key, quantity, &remove);
     //this should always be true, else something went wrong
     if (remove == quantity.si) {
