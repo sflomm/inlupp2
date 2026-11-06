@@ -50,46 +50,46 @@ int clean_suite(void) {
 
 void test_create_destroy()
 {
-    warehouse_t *warehouse = warehouse_create();
+    warehouse_t *warehouse = ioopm_warehouse_create();
     CU_ASSERT_PTR_NOT_NULL(warehouse)
-    warehouse_destroy(warehouse);
+    ioopm_warehouse_destroy(warehouse);
 }
 
 void test_add_1_merch() {
-warehouse_t *warehouse = warehouse_create();
-  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+warehouse_t *warehouse = ioopm_warehouse_create();
+  ioopm_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
   CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
-  warehouse_destroy(warehouse);
+  ioopm_warehouse_destroy(warehouse);
 }
  
 void test_add_several_merch() {
-    warehouse_t *warehouse = warehouse_create();
-    warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
-    warehouse_add_merch(warehouse, "Catan", "Epic board game", 150);
-    warehouse_add_merch(warehouse, "Small World", "Epic board game", 300);
+    warehouse_t *warehouse = ioopm_warehouse_create();
+    ioopm_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+    ioopm_add_merch(warehouse, "Catan", "Epic board game", 150);
+    ioopm_add_merch(warehouse, "Small World", "Epic board game", 300);
     CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
     CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Catan")));
     CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Small World")));
-    warehouse_destroy(warehouse);
+    ioopm_warehouse_destroy(warehouse);
 } 
 
 void test_remove_merch() {
-  warehouse_t *warehouse = warehouse_create();
-  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  warehouse_t *warehouse = ioopm_warehouse_create();
+  ioopm_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
   CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
-  warehouse_remove_merch(warehouse, "Bohnanza");
+  ioopm_remove_merch(warehouse, "Bohnanza");
   CU_ASSERT_FALSE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
-  warehouse_destroy(warehouse);
+  ioopm_warehouse_destroy(warehouse);
 } 
 
 void test_find_merch()
 {
-  warehouse_t *warehouse = warehouse_create();
-  warehouse_add_merch(warehouse, "Catan", "Catan game", 400);
-  warehouse_add_merch(warehouse, "Small World", "Small world game", 300);
-  warehouse_add_merch(warehouse, "Bohnanza", "Bohnanza game", 200);
-  merch_t *merch = warehouse_find_merch(warehouse, "Bohnanza");
-  merch_t *merch2 = warehouse_find_merch(warehouse, "Chess");
+  warehouse_t *warehouse = ioopm_warehouse_create();
+  ioopm_add_merch(warehouse, "Catan", "Catan game", 400);
+  ioopm_add_merch(warehouse, "Small World", "Small world game", 300);
+  ioopm_add_merch(warehouse, "Bohnanza", "Bohnanza game", 200);
+  merch_t *merch = ioopm_find_merch(warehouse, "Bohnanza");
+  merch_t *merch2 = ioopm_find_merch(warehouse, "Chess");
   CU_ASSERT_PTR_NULL(merch2);
 
   char *name = merch->name;
@@ -101,19 +101,19 @@ void test_find_merch()
   CU_ASSERT_EQUAL(name, "Bohnanza");
   CU_ASSERT_EQUAL(desc, "Bohnanza game");
   
-  warehouse_destroy(warehouse);
+  ioopm_warehouse_destroy(warehouse);
 }
 
 void test_edit_merch() {
-  warehouse_t *warehouse = warehouse_create();
+  warehouse_t *warehouse = ioopm_warehouse_create();
 
   // case 1, only new description and price 
-  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  ioopm_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
   CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
   size_t new_price = 1000;
-  warehouse_edit_merch(warehouse, "Bohnanza", "Bohnanza", "New Description", new_price);
+  ioopm_edit_merch(warehouse, "Bohnanza", "Bohnanza", "New Description", new_price);
   CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
-  merch_t *merch = warehouse_find_merch(warehouse, "Bohnanza");
+  merch_t *merch = ioopm_find_merch(warehouse, "Bohnanza");
 
   CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
   CU_ASSERT_TRUE(strcmp(merch->name, "Bohnanza") == 0);
@@ -121,30 +121,30 @@ void test_edit_merch() {
   CU_ASSERT_TRUE(merch->price == new_price);
 
   // case 2, new name
-  warehouse_edit_merch(warehouse, "Bohnanza", "Catan", "New Description", new_price);
+  ioopm_edit_merch(warehouse, "Bohnanza", "Catan", "New Description", new_price);
   CU_ASSERT_FALSE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Bohnanza")));
   CU_ASSERT_TRUE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Catan")));
-  merch_t *merch2 = warehouse_find_merch(warehouse, "Catan");
+  merch_t *merch2 = ioopm_find_merch(warehouse, "Catan");
   CU_ASSERT_TRUE(strcmp(merch2->name, "Catan") == 0);
   CU_ASSERT_TRUE(strcmp(merch2->desc, "New Description") == 0);
   CU_ASSERT_TRUE(merch2->price == new_price);
 
   // case 3, merch does not exist
-  warehouse_edit_merch(warehouse, "Yatzy", "Catan", "New Description", new_price);
+  ioopm_edit_merch(warehouse, "Yatzy", "Catan", "New Description", new_price);
   CU_ASSERT_FALSE(ioopm_hash_table_has_key(warehouse->merch_ht, string_elem("Yatzy")));
   
-  warehouse_destroy(warehouse);
+  ioopm_warehouse_destroy(warehouse);
 }
 
 void test_replenish_stock()
 {
-  warehouse_t *warehouse = warehouse_create();
-  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
-  merch_t *merch = warehouse_find_merch(warehouse, "Bohnanza");
+  warehouse_t *warehouse = ioopm_warehouse_create();
+  ioopm_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  merch_t *merch = ioopm_find_merch(warehouse, "Bohnanza");
   size_t quant_to_add = 2;
 
   // case 1, shelf does not exist
-  warehouse_replenish_stock(warehouse, "A1", merch, quant_to_add);
+  ioopm_replenish_stock(warehouse, "A1", merch, quant_to_add);
   CU_ASSERT_EQUAL(merch->stock, quant_to_add);
 
   ioopm_list_iterator_t *iter = ioopm_list_iterator_create(merch->locs);
@@ -167,7 +167,7 @@ void test_replenish_stock()
 
   // case 2, shelf already exists 
   size_t more_quant = 4; 
-  warehouse_replenish_stock(warehouse, "A1", merch, more_quant);
+  ioopm_replenish_stock(warehouse, "A1", merch, more_quant);
   CU_ASSERT_EQUAL(merch->stock, more_quant + quant_to_add);
 
   ioopm_list_iterator_t *iter2 = ioopm_list_iterator_create(merch->locs);
@@ -187,26 +187,26 @@ void test_replenish_stock()
   CU_ASSERT_TRUE(found);
   ioopm_list_iterator_destroy(iter2);
 
-  warehouse_destroy(warehouse);
+  ioopm_warehouse_destroy(warehouse);
 }
 
 void test_edit_merch_same_stock()
 {
-  warehouse_t *warehouse = warehouse_create();
-  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  warehouse_t *warehouse = ioopm_warehouse_create();
+  ioopm_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
   size_t new_price = 1000;
-  warehouse_edit_merch(warehouse, "Bohnanza", "Catan", "New Description", new_price);
-  merch_t *merch = warehouse_find_merch(warehouse, "Catan");
+  ioopm_edit_merch(warehouse, "Bohnanza", "Catan", "New Description", new_price);
+  merch_t *merch = ioopm_find_merch(warehouse, "Catan");
   size_t add_quant = 10;
-  warehouse_replenish_stock(warehouse, "B8", merch, add_quant); 
+  ioopm_replenish_stock(warehouse, "B8", merch, add_quant); 
   CU_ASSERT_EQUAL(merch->stock, add_quant);
 
-  warehouse_destroy(warehouse);
+  ioopm_warehouse_destroy(warehouse);
 }
 
 // test_create_empty_() {
-//   warehouse_t *warehouse = warehouse_create();
-//   ioopm_hash_table_t *cart = warehouse_create_cart(warehouse);
+//   warehouse_t *warehouse = ioopm_warehouse_create();
+//   ioopm_hash_table_t *cart = ioopm_create_cart(warehouse);
 //   CU_ASSERT_TRUE(ioopm_hash_table_is_empty(cart));
 
 // }
@@ -217,43 +217,43 @@ void test_edit_merch_same_stock()
 void test_add_to_cart() {
   //initilazing
   size_t index = 0;
-  warehouse_t *warehouse = warehouse_create();
-  shopping_cart_t *cart = warehouse_create_cart(warehouse);
-  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  warehouse_t *warehouse = ioopm_warehouse_create();
+  shopping_cart_t *cart = ioopm_create_cart(warehouse);
+  ioopm_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
     size_t add_quant = 10;
-    merch_t *merch = warehouse_find_merch(warehouse, "Bohnanza");
-  warehouse_replenish_stock(warehouse, "A10", merch, add_quant);
+    merch_t *merch = ioopm_find_merch(warehouse, "Bohnanza");
+  ioopm_replenish_stock(warehouse, "A10", merch, add_quant);
   //add to cart
-  warehouse_add_to_cart(warehouse, cart->id, "Bohnanza", 10);
+  ioopm_add_to_cart(warehouse, cart->id, "Bohnanza", 10);
   
   elem_t result = size_elem(0);
   ioopm_hash_table_lookup(cart->items, string_elem("Bohnanza"), &result);
   CU_ASSERT_EQUAL(result.si, 10);
 
   //remove from cart and destroy the warehouse
-  warehouse_remove_cart(warehouse, cart->id, &index);
-  warehouse_destroy(warehouse);
+  ioopm_remove_cart(warehouse, cart->id, &index);
+  ioopm_warehouse_destroy(warehouse);
 }
 
 void test_add_several_to_cart() {
   size_t index = 0;
-  warehouse_t *warehouse = warehouse_create();
-  shopping_cart_t *cart = warehouse_create_cart(warehouse);
-  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
-  warehouse_add_merch(warehouse, "Catan", "Epic board game", 200);
-  warehouse_add_merch(warehouse, "Small World", "Epic board game", 200);
+  warehouse_t *warehouse = ioopm_warehouse_create();
+  shopping_cart_t *cart = ioopm_create_cart(warehouse);
+  ioopm_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  ioopm_add_merch(warehouse, "Catan", "Epic board game", 200);
+  ioopm_add_merch(warehouse, "Small World", "Epic board game", 200);
   size_t add_quant = 10;
-  merch_t *merch1 = warehouse_find_merch(warehouse, "Bohnanza");
-  merch_t *merch2 = warehouse_find_merch(warehouse, "Catan");
-  merch_t *merch3 = warehouse_find_merch(warehouse, "Small World");
-  warehouse_replenish_stock(warehouse, "A10", merch1, add_quant);
-  warehouse_replenish_stock(warehouse, "A11", merch2, add_quant);
-  warehouse_replenish_stock(warehouse, "A12", merch3, add_quant);
+  merch_t *merch1 = ioopm_find_merch(warehouse, "Bohnanza");
+  merch_t *merch2 = ioopm_find_merch(warehouse, "Catan");
+  merch_t *merch3 = ioopm_find_merch(warehouse, "Small World");
+  ioopm_replenish_stock(warehouse, "A10", merch1, add_quant);
+  ioopm_replenish_stock(warehouse, "A11", merch2, add_quant);
+  ioopm_replenish_stock(warehouse, "A12", merch3, add_quant);
 
   //add to cart
-   warehouse_add_to_cart(warehouse, cart->id, "Bohnanza", add_quant);
-   warehouse_add_to_cart(warehouse, cart->id, "Catan", add_quant);
-   warehouse_add_to_cart(warehouse, cart->id, "Small World", add_quant);
+   ioopm_add_to_cart(warehouse, cart->id, "Bohnanza", add_quant);
+   ioopm_add_to_cart(warehouse, cart->id, "Catan", add_quant);
+   ioopm_add_to_cart(warehouse, cart->id, "Small World", add_quant);
    ioopm_hash_table_iterator_t *it = ioopm_hash_table_iterator_create(cart->items);
 
 
@@ -263,7 +263,7 @@ void test_add_several_to_cart() {
    }
    ioopm_hash_table_iterator_destroy(it);
 
-   warehouse_remove_cart(warehouse, cart->id, &index);
+   ioopm_remove_cart(warehouse, cart->id, &index);
 }
 
 
@@ -271,51 +271,51 @@ void test_add_several_to_cart() {
 
 
 void test_remove_from_cart() {
-   warehouse_t *warehouse = warehouse_create();
-  shopping_cart_t *cart = warehouse_create_cart(warehouse);
+   warehouse_t *warehouse = ioopm_warehouse_create();
+  shopping_cart_t *cart = ioopm_create_cart(warehouse);
   size_t index = 0;
-  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  ioopm_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
   size_t add_quant = 10;
-  merch_t *merch1 = warehouse_find_merch(warehouse, "Bohnanza");
-  warehouse_replenish_stock(warehouse, "A10", merch1, add_quant);
+  merch_t *merch1 = ioopm_find_merch(warehouse, "Bohnanza");
+  ioopm_replenish_stock(warehouse, "A10", merch1, add_quant);
 
     //add to cart
-   warehouse_add_to_cart(warehouse, cart->id, "Bohnanza", add_quant);
+   ioopm_add_to_cart(warehouse, cart->id, "Bohnanza", add_quant);
    //remove from cart
-   warehouse_remove_from_cart(warehouse, cart->id, "Bohnanza", add_quant);
+   ioopm_remove_from_cart(warehouse, cart->id, "Bohnanza", add_quant);
 
    CU_ASSERT_FALSE(ioopm_hash_table_has_key(cart->items, string_elem("Bohnanza")));
 
    //free memory
-   warehouse_remove_cart(warehouse, cart->id, &index);
-   warehouse_destroy(warehouse);
+   ioopm_remove_cart(warehouse, cart->id, &index);
+   ioopm_warehouse_destroy(warehouse);
 }
 
 void test_remove_several_from_cart() {
-   warehouse_t *warehouse = warehouse_create();
-  shopping_cart_t *cart = warehouse_create_cart(warehouse);
+   warehouse_t *warehouse = ioopm_warehouse_create();
+  shopping_cart_t *cart = ioopm_create_cart(warehouse);
   size_t index = 0;
-  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
-  warehouse_add_merch(warehouse, "Catan", "Epic board game", 200);
-  warehouse_add_merch(warehouse, "Small World", "Epic board game", 200);
+  ioopm_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  ioopm_add_merch(warehouse, "Catan", "Epic board game", 200);
+  ioopm_add_merch(warehouse, "Small World", "Epic board game", 200);
   size_t add_quant = 10;
   size_t add_quant_2 = 8;
   size_t add_quant_3 = 7;
-  merch_t *merch1 = warehouse_find_merch(warehouse, "Bohnanza");
-  merch_t *merch2 = warehouse_find_merch(warehouse, "Catan");
-  merch_t *merch3 = warehouse_find_merch(warehouse, "Small World");
-  warehouse_replenish_stock(warehouse, "A10", merch1, add_quant);
-  warehouse_replenish_stock(warehouse, "A11", merch2, add_quant);
-  warehouse_replenish_stock(warehouse, "A12", merch3, add_quant);
+  merch_t *merch1 = ioopm_find_merch(warehouse, "Bohnanza");
+  merch_t *merch2 = ioopm_find_merch(warehouse, "Catan");
+  merch_t *merch3 = ioopm_find_merch(warehouse, "Small World");
+  ioopm_replenish_stock(warehouse, "A10", merch1, add_quant);
+  ioopm_replenish_stock(warehouse, "A11", merch2, add_quant);
+  ioopm_replenish_stock(warehouse, "A12", merch3, add_quant);
 
     //add to cart
-   warehouse_add_to_cart(warehouse, cart->id, "Bohnanza", add_quant);
-   warehouse_add_to_cart(warehouse, cart->id, "Catan", add_quant);
-   warehouse_add_to_cart(warehouse, cart->id, "Small World", add_quant);
+   ioopm_add_to_cart(warehouse, cart->id, "Bohnanza", add_quant);
+   ioopm_add_to_cart(warehouse, cart->id, "Catan", add_quant);
+   ioopm_add_to_cart(warehouse, cart->id, "Small World", add_quant);
    //remove from cart
-   warehouse_remove_from_cart(warehouse, cart->id, "Bohnanza", add_quant);
-   warehouse_remove_from_cart(warehouse, cart->id, "Catan", add_quant_2);
-   warehouse_remove_from_cart(warehouse, cart->id, "Small World", add_quant_3);
+   ioopm_remove_from_cart(warehouse, cart->id, "Bohnanza", add_quant);
+   ioopm_remove_from_cart(warehouse, cart->id, "Catan", add_quant_2);
+   ioopm_remove_from_cart(warehouse, cart->id, "Small World", add_quant_3);
 
    ioopm_hash_table_iterator_t *it = ioopm_hash_table_iterator_create(cart->items);
 
@@ -331,78 +331,78 @@ void test_remove_several_from_cart() {
 
 
    //free memory
-   warehouse_remove_cart(warehouse, cart->id, &index);
-   warehouse_destroy(warehouse);
-} //FIXME: göra teser för remove_cart funktionen  
+   ioopm_remove_cart(warehouse, cart->id, &index);
+   ioopm_warehouse_destroy(warehouse);
+} 
 void test_remove_cart() {
   size_t index = 0;
-  warehouse_t *warehouse = warehouse_create();
-  shopping_cart_t *cart = warehouse_create_cart(warehouse);
+  warehouse_t *warehouse = ioopm_warehouse_create();
+  shopping_cart_t *cart = ioopm_create_cart(warehouse);
   size_t cart_id = cart->id;
-  warehouse_remove_cart(warehouse, cart->id, &index);
-  CU_ASSERT_EQUAL(warehouse_find_shopping_cart(warehouse, cart_id, &index), NULL);
-  warehouse_destroy(warehouse);
+  ioopm_remove_cart(warehouse, cart->id, &index);
+  CU_ASSERT_EQUAL(ioopm_find_shopping_cart(warehouse, cart_id, &index), NULL);
+  ioopm_warehouse_destroy(warehouse);
 }
 
 void test_checkout_merch() {
   size_t index = 0;
-  warehouse_t *warehouse = warehouse_create();
-  shopping_cart_t *cart = warehouse_create_cart(warehouse);
+  warehouse_t *warehouse = ioopm_warehouse_create();
+  shopping_cart_t *cart = ioopm_create_cart(warehouse);
   size_t add_quant = 10;
   size_t add_quant_2 = 8;
   size_t add_quant_3 = 7;
   // add and find merch
-  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
-  warehouse_add_merch(warehouse, "Catan", "Epic board game", 200);
-  warehouse_add_merch(warehouse, "Small World", "Epic board game", 200);
-  merch_t *merch1 = warehouse_find_merch(warehouse, "Bohnanza");
-  merch_t *merch2 = warehouse_find_merch(warehouse, "Catan");
-  merch_t *merch3 = warehouse_find_merch(warehouse, "Small World");
+  ioopm_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  ioopm_add_merch(warehouse, "Catan", "Epic board game", 200);
+  ioopm_add_merch(warehouse, "Small World", "Epic board game", 200);
+  merch_t *merch1 = ioopm_find_merch(warehouse, "Bohnanza");
+  merch_t *merch2 = ioopm_find_merch(warehouse, "Catan");
+  merch_t *merch3 = ioopm_find_merch(warehouse, "Small World");
 
-  warehouse_replenish_stock(warehouse, "A10", merch1, add_quant);
-  warehouse_replenish_stock(warehouse, "A11", merch2, add_quant);
-  warehouse_replenish_stock(warehouse, "A12", merch3, add_quant);
+  ioopm_replenish_stock(warehouse, "A10", merch1, add_quant);
+  ioopm_replenish_stock(warehouse, "A11", merch2, add_quant);
+  ioopm_replenish_stock(warehouse, "A12", merch3, add_quant);
 
-  warehouse_add_to_cart(warehouse, cart->id, "Bohnanza", add_quant);
-  warehouse_add_to_cart(warehouse, cart->id, "Catan", add_quant_2);
-  warehouse_add_to_cart(warehouse, cart->id, "Small World", add_quant_3);
+  ioopm_add_to_cart(warehouse, cart->id, "Bohnanza", add_quant);
+  ioopm_add_to_cart(warehouse, cart->id, "Catan", add_quant_2);
+  ioopm_add_to_cart(warehouse, cart->id, "Small World", add_quant_3);
   size_t cart_id = cart->id;
 
-  warehouse_checkout(warehouse, cart->id);
+  ioopm_checkout(warehouse, cart->id);
   CU_ASSERT_EQUAL(merch1->stock, 0);
   CU_ASSERT_EQUAL(merch2->stock, 2);
   CU_ASSERT_EQUAL(merch3->stock, 3);
-  CU_ASSERT_EQUAL(warehouse_find_shopping_cart(warehouse, cart_id, &index), NULL);
-  warehouse_destroy(warehouse);
+  CU_ASSERT_EQUAL(ioopm_find_shopping_cart(warehouse, cart_id, &index), NULL);
+  ioopm_warehouse_destroy(warehouse);
 }
 
 void test_calculate_cost() {
   size_t index = 0;
-  warehouse_t *warehouse = warehouse_create();
-  shopping_cart_t *cart = warehouse_create_cart(warehouse);
+  warehouse_t *warehouse = ioopm_warehouse_create();
+  shopping_cart_t *cart = ioopm_create_cart(warehouse);
   size_t add_quant = 10;
   size_t add_quant_2 = 8;
   size_t add_quant_3 = 7;
 
-  warehouse_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
-  warehouse_add_merch(warehouse, "Catan", "Epic board game", 100);
-  warehouse_add_merch(warehouse, "Small World", "Epic board game", 50);
-  merch_t *merch1 = warehouse_find_merch(warehouse, "Bohnanza");
-  merch_t *merch2 = warehouse_find_merch(warehouse, "Catan");
-  merch_t *merch3 = warehouse_find_merch(warehouse, "Small World");
+  ioopm_add_merch(warehouse, "Bohnanza", "Epic board game", 200);
+  ioopm_add_merch(warehouse, "Catan", "Epic board game", 100);
+  ioopm_add_merch(warehouse, "Small World", "Epic board game", 50);
+  merch_t *merch1 = ioopm_find_merch(warehouse, "Bohnanza");
+  merch_t *merch2 = ioopm_find_merch(warehouse, "Catan");
+  merch_t *merch3 = ioopm_find_merch(warehouse, "Small World");
 
-  warehouse_replenish_stock(warehouse, "A10", merch1, add_quant);
-  warehouse_replenish_stock(warehouse, "A11", merch2, add_quant);
-  warehouse_replenish_stock(warehouse, "A12", merch3, add_quant);
+  ioopm_replenish_stock(warehouse, "A10", merch1, add_quant);
+  ioopm_replenish_stock(warehouse, "A11", merch2, add_quant);
+  ioopm_replenish_stock(warehouse, "A12", merch3, add_quant);
 
-  warehouse_add_to_cart(warehouse, cart->id, "Bohnanza", add_quant);
-  warehouse_add_to_cart(warehouse, cart->id, "Catan", add_quant_2);
-  warehouse_add_to_cart(warehouse, cart->id, "Small World", add_quant_3);
+  ioopm_add_to_cart(warehouse, cart->id, "Bohnanza", add_quant);
+  ioopm_add_to_cart(warehouse, cart->id, "Catan", add_quant_2);
+  ioopm_add_to_cart(warehouse, cart->id, "Small World", add_quant_3);
 
-  size_t cost = warehouse_calculate_cost(warehouse, cart->id);
+  size_t cost = ioopm_calculate_cost(warehouse, cart->id);
   CU_ASSERT_EQUAL(cost, 3150);
-  warehouse_remove_cart(warehouse, cart->id, &index);
-  warehouse_destroy(warehouse);
+  ioopm_remove_cart(warehouse, cart->id, &index);
+  ioopm_warehouse_destroy(warehouse);
 }
 
 

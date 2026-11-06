@@ -30,7 +30,7 @@ bool simple_knr_eq(elem_t key1, elem_t key2)
   return (strcmp(key1.s, key2.s) == 0);
 }
 
-warehouse_t *warehouse_create(void)
+warehouse_t *ioopm_warehouse_create(void)
 {
     //merch table
     ioopm_hash_table_t *merch_ht = ioopm_hash_table_create(string_knr_hash, simple_knr_eq);
@@ -107,7 +107,7 @@ static void warehouse_destroy_one_merch(merch_t *merch)
   free(merch);
 }
 
-void warehouse_destroy(warehouse_t *wh) {
+void ioopm_warehouse_destroy(warehouse_t *wh) {
   warehouse_destroy_all_merch(wh);
   ioopm_hash_table_destroy(wh->merch_ht);
   ioopm_hash_table_destroy(wh->location_ht);
@@ -117,7 +117,7 @@ void warehouse_destroy(warehouse_t *wh) {
   free(wh);
 }
 
-merch_t *warehouse_find_merch(warehouse_t *wh, char *key)
+merch_t *ioopm_find_merch(warehouse_t *wh, char *key)
 {
   ioopm_hash_table_t *ht = wh->merch_ht;
   ioopm_hash_table_iterator_t *it = ioopm_hash_table_iterator_create(ht);
@@ -141,7 +141,7 @@ merch_t *warehouse_find_merch(warehouse_t *wh, char *key)
   return NULL;
 }
 
-void warehouse_add_merch(warehouse_t *wh, char *name, char *desc, size_t price)
+void ioopm_add_merch(warehouse_t *wh, char *name, char *desc, size_t price)
 {        
     merch_t *merch = calloc(1, sizeof(merch_t));
     merch->name = name;
@@ -152,9 +152,9 @@ void warehouse_add_merch(warehouse_t *wh, char *name, char *desc, size_t price)
     ioopm_hash_table_insert(wh->merch_ht, string_elem(name), ptr_elem(merch));
 }
 
-bool warehouse_remove_merch(warehouse_t *wh, char *key)
+bool ioopm_remove_merch(warehouse_t *wh, char *key)
 {
-  merch_t *merch = warehouse_find_merch(wh, key);
+  merch_t *merch = ioopm_find_merch(wh, key);
   if (merch == NULL)
   {
     return false;
@@ -176,10 +176,10 @@ bool warehouse_remove_merch(warehouse_t *wh, char *key)
   return true;
 }
 
-bool warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_desc, size_t new_price)
+bool ioopm_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_desc, size_t new_price)
 {
   
-  merch_t *merch = warehouse_find_merch(wh, key);
+  merch_t *merch = ioopm_find_merch(wh, key);
   if (merch == NULL)
   {
     return false;
@@ -211,7 +211,7 @@ bool warehouse_edit_merch(warehouse_t *wh, char *key, char *new_name, char* new_
   }
 }
 
-shelf_t *warehouse_find_shelf(ioopm_list_t *list, char *shelf)
+shelf_t *ioopm_find_shelf(ioopm_list_t *list, char *shelf)
 {
   shelf_t *result = NULL;
   if (list == NULL)
@@ -236,9 +236,9 @@ shelf_t *warehouse_find_shelf(ioopm_list_t *list, char *shelf)
   return result;
 }
 
-void warehouse_replenish_stock(warehouse_t *wh, char *shelf, merch_t *merch, size_t add_quant)
+void ioopm_replenish_stock(warehouse_t *wh, char *shelf, merch_t *merch, size_t add_quant)
 {
-  shelf_t *shelf_to_replenish = warehouse_find_shelf(merch->locs, shelf);
+  shelf_t *shelf_to_replenish = ioopm_find_shelf(merch->locs, shelf);
 
   if (shelf_to_replenish == NULL) // shelf does not exist
   {
