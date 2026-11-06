@@ -71,14 +71,14 @@ shopping_cart_t *warehouse_create_cart(warehouse_t *wh);
 /// @brief Finds the shopping cart by traversing the shopping carts in the warehouse
 /// @param wh The warehouse that holds shopping carts
 /// @param cart_id shopping cart's identifier
-/// @param index ???
+/// @param index the position of the shopping cart in the linked list
 /// @return a shopping cart or NULL if not found
 shopping_cart_t *warehouse_find_shopping_cart(warehouse_t *wh, size_t cart_id, size_t *index);
 
 /// @brief removes a shopping cart from the system
 /// @param wh warehouse
 /// @param cart_id shopping cart's identifier, cart to be removed
-/// @param index ???
+/// @param index the position of the shopping cart in the linked list
 void warehouse_remove_cart(warehouse_t *wh, size_t cart_id, size_t *index);
 
 /// @brief add some quantity of merch to specific shopping cart

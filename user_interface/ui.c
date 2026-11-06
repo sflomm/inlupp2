@@ -239,7 +239,7 @@ static void add_to_cart(warehouse_t *warehouse) {
     }
     printf("%d of %s was added to the shopping cart\n", quant, merch);
 }
-
+    
 static void remove_from_cart(warehouse_t *warehouse) {
     //check if cart is valid
     int cart_id;
