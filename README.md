@@ -42,6 +42,3 @@ Should get the following data:
 | cart_calc.c   | 122           | 105     | 86%     |    48   |  32   |  66%  |
 | merch_stock.c | 129           | 121     | 93%     |    34   |  26   |  76%  |
 
-## Pointers as keys or values
-***
-The hashtable implementation does not take ownership of keys and values that are some sort of pointer. Other fields of elem_t are owned by the hashtable.
