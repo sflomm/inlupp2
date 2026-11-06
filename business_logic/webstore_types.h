@@ -3,6 +3,13 @@
 #include "../generic_types/linked_list.h"
 #include "../generic_types/hash_table.h"
 
+/**
+* @file webstore_types.h
+* @author Ella Odlander & Simon Funke
+* @date 6/11 2026
+* @brief structs used for a webstore backend program
+*/
+
 typedef struct merch merch_t;
 typedef struct shelf shelf_t;
 typedef struct warehouse warehouse_t;
