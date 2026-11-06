@@ -1,6 +1,6 @@
 # Inlupp 2
 ***
-This is a README file for Assignement 2 of the IOOPM-course
+This is a README file for Assignment 2 of the IOOPM-course
 ## Run the program
 *** 
 Use the following terminal command to run the program:
