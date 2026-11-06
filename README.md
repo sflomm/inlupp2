@@ -9,6 +9,7 @@ make run
 ```
 ### How to use the program
 *** 
+The program is a basic protype of a backend webstore. It has a text based menu which requires user input. Some of the actions possible in the program are add/remove/edit merchandise and shopping carts. The actions made are not saved, it only exists while the program runs. 
 
 ## Running tests
 ***
