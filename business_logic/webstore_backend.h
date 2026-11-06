@@ -5,6 +5,13 @@
 #include "../generic_types/linked_list_struct.h"
 #include "../generic_types/common.h"
 
+/**
+* @file webstore_backend.h
+* @author Ella Odlander & Simon Funke
+* @date 6/11 2026
+* @brief functions needed to run main program and are tested in webstore_backend_tests.c 
+*/
+
 typedef struct warehouse warehouse_t;
 
 // merch_stock.c FUNCTIONS

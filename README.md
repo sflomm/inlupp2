@@ -1,6 +1,8 @@
 # Inlupp 2
 ***
-This is a README file for Assignment 2 of the IOOPM-course
+This is a README file for assignment 2 of the IOOPM-course.
+The assignment is based on the previous task assignment 1. 
+This program is created by Ella Odlander and Simon Funke in the autumn 2026.
 ## How to use the program
 *** 
 The program is a basic protype of a backend webstore. It has a text based menu which requires user input. Some of the actions possible in the program are add/remove/edit merchandise and shopping carts. The actions made are not saved, it only exists while the program runs. 
