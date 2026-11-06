@@ -1,7 +1,7 @@
 # Inlupp 2
 ***
 This is a README file for assignment 2 of the IOOPM-course.
-The assignment is based on the previous task assignment.\ 
+The assignment is based on the previous task assignment.\
 This program was created by Ella Odlander and Simon Funke in the autumn 2026.
 ## How to use the program
 *** 
